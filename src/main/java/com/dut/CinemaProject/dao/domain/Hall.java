@@ -1,5 +1,8 @@
 package com.dut.CinemaProject.dao.domain;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 
 @Entity
@@ -7,41 +10,9 @@ import javax.persistence.*;
 public class Hall {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    @Getter @Setter private Long id;
 
-    private String name;
-    private Integer rows;
-    private Integer places;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Integer getRows() {
-        return rows;
-    }
-
-    public void setRows(Integer rows) {
-        this.rows = rows;
-    }
-
-    public Integer getPlaces() {
-        return places;
-    }
-
-    public void setPlaces(Integer places) {
-        this.places = places;
-    }
+    @Getter @Setter private String name;
+    @Getter @Setter private Integer rows;
+    @Getter @Setter private Integer places;
 }
