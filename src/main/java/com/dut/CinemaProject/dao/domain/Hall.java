@@ -7,12 +7,13 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "halls")
+@Getter @Setter
 public class Hall {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Getter @Setter private Long id;
+    private Long id;
 
-    @Getter @Setter private String name;
-    @Getter @Setter private Integer rows;
-    @Getter @Setter private Integer places;
+    private String name;
+    private Integer rows;
+    private Integer places;
 }

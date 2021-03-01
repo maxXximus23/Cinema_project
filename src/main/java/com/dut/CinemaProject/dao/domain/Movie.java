@@ -7,16 +7,17 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "movies")
+@Getter @Setter
 public class Movie {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Getter @Setter private Long id;
+    private Long id;
 
-    @Getter @Setter private String title;
-    @Getter @Setter private String description;
+    private String title;
+    private String description;
     @Column(name="poster_path")
-    @Getter @Setter private String posterPath;
+    private String posterPath;
     @Column(name="trailer_path")
-    @Getter @Setter private String trailerPath;
-    @Getter @Setter private Integer duration;
+    private String trailerPath;
+    private Integer duration;
 }

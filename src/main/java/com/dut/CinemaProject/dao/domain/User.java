@@ -7,12 +7,13 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "users")
+@Getter @Setter
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Getter @Setter private Long id;
+    private Long id;
 
-    @Getter @Setter private String name;
-    @Getter @Setter private String password;
-    @Getter @Setter private String email;
+    private String name;
+    private String password;
+    private String email;
 }

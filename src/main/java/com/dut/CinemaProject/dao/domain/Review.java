@@ -8,19 +8,19 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "reviews")
+@Getter @Setter
 public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Getter @Setter private Long id;
+     private Long id;
 
-    @Getter @Setter private String text;
-    @Getter @Setter private Integer mark;
+    private String text;
     @Column(name="creation_date")
-    @Getter @Setter private LocalDateTime creationDate;
+    private LocalDateTime creationDate;
     @ManyToOne
     @JoinColumn(name = "movie_id", nullable = false)
-    @Getter @Setter private Movie movie;
+    private Movie movie;
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    @Getter @Setter private User author;
+    private User author;
 }

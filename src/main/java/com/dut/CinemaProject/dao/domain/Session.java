@@ -8,16 +8,17 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "sessions")
+@Getter @Setter
 public class Session {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Getter @Setter private Long id;
+    private Long id;
 
-    @Getter @Setter private LocalDateTime date;
+    private LocalDateTime date;
     @ManyToOne
     @JoinColumn(name = "movie_id", nullable = false)
-    @Getter @Setter private Movie movie;
+    private Movie movie;
     @ManyToOne
     @JoinColumn(name = "hall_id", nullable = false)
-    @Getter @Setter private Hall hall;
+    private Hall hall;
 }
