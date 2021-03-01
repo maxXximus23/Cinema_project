@@ -1,12 +1,19 @@
 package com.dut.CinemaProject.dao.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
+
+import javax.persistence.*;
 
 @Entity
-@Table(name = "usrs")
+@Table(name = "users")
+@Getter @Setter
 public class User {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    private String name;
+    private String password;
+    private String email;
 }
