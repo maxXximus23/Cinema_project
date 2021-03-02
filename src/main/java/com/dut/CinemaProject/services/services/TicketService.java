@@ -19,9 +19,10 @@ public class TicketService implements ITicketService {
     @Autowired
     private UserRepository userRepository;
 
+
     @Override
     public List<TicketDto> getUsersTickets(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(ItemNotFoundException::new);
-        return ticketRepository.findTicketsByUser(user).stream().map(TicketDto::new).collect(Collectors.toList());
+        return ticketRepository.findTicketsByCustomer(user).stream().map(TicketDto::new).collect(Collectors.toList());
     }
 }
