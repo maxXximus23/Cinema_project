@@ -1,6 +1,7 @@
 package com.dut.CinemaProject.api.controllers;
 
-import com.dut.CinemaProject.bll.interfaces.ITicketService;
+import com.dut.CinemaProject.services.interfaces.ITicketService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -8,21 +9,16 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("ticket")
 public class TicketController {
 
+    @Autowired
     private ITicketService ticketService;
-
-    public TicketController(ITicketService ticketService){
-        this.ticketService = ticketService;
-    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> cancelBooking(@PathVariable Long id){
         try{
-            var ticket = ticketService.getTicketById(id);
-            if(ticket.isPresent())
-                ticketService.deleteTicket(id);
-            return ResponseEntity.noContent().build();
+            ticketService.deleteTicket(id);
+            return ResponseEntity.ok().build();
         }
-        catch(ArithmeticException ae){
+        catch(Exception e){
             return ResponseEntity.status(500).build();
         }
     }
