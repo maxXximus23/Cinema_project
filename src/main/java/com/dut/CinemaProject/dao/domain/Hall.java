@@ -14,6 +14,6 @@ public class Hall {
     private Long id;
 
     private String name;
-    private Integer rows;
+    private Integer rowsAmount;
     private Integer places;
 }
