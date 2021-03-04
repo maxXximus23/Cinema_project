@@ -6,7 +6,7 @@ import com.dut.CinemaProject.dao.domain.User;
 import com.dut.CinemaProject.dao.repos.SessionRepository;
 import com.dut.CinemaProject.dao.repos.TicketRepository;
 import com.dut.CinemaProject.dao.repos.UserRepository;
-import com.dut.CinemaProject.dto.Ticket.PurchaseTicketDto;
+import com.dut.CinemaProject.dto.Ticket.PurchaseTicket;
 import com.dut.CinemaProject.dto.Ticket.TicketDto;
 import com.dut.CinemaProject.exceptions.ItemNotFoundException;
 import com.dut.CinemaProject.services.interfaces.ITicketService;
@@ -46,25 +46,21 @@ public class TicketService implements ITicketService {
     }
 
     @Override
-    public Long purchaseTicket(PurchaseTicketDto purchaseTicketDto) {
-        Session session = sessionRepository.findById(purchaseTicketDto.getSessionId())
+    public Long purchaseTicket(PurchaseTicket purchaseTicket) {
+        Session session = sessionRepository.findById(purchaseTicket.getSessionId())
                 .orElseThrow(ItemNotFoundException::new);
-        Integer ticketsCount = ticketRepository.countTicketsBySessionId(purchaseTicketDto.getSessionId());
 
-        if(session.getHall().getRowsAmount() < purchaseTicketDto.getRow())
+        if(session.getHall().getRowsAmount() < purchaseTicket.getRow())
             throw new UnsupportedOperationException("Row out of bounce");
 
-        if(session.getHall().getPlaces() < purchaseTicketDto.getPlace())
+        if(session.getHall().getPlaces() < purchaseTicket.getPlace())
             throw new UnsupportedOperationException("Place out of bounce");
 
-        User user = userRepository.findById(purchaseTicketDto.getUserId().orElseThrow(IllegalStateException::new))
+        User user = userRepository.findById(purchaseTicket.getUserId())
                 .orElseThrow(ItemNotFoundException::new);
 
-        if(ticketsCount == (session.getHall().getRowsAmount() * session.getHall().getPlaces()))
-            throw new UnsupportedOperationException("All tickets are sold out");
-
-        Optional<Ticket> existingTicket = ticketRepository.getTicketByDetails(purchaseTicketDto.getPlace(),
-                purchaseTicketDto.getRow(), purchaseTicketDto.getSessionId());
+        Optional<Ticket> existingTicket = ticketRepository.getTicketByDetails(purchaseTicket.getPlace(),
+                purchaseTicket.getRow(), purchaseTicket.getSessionId());
 
         if(existingTicket.isPresent())
             throw new UnsupportedOperationException("Requested ticket is sold out");
@@ -72,8 +68,8 @@ public class TicketService implements ITicketService {
         Ticket ticket = new Ticket();
         ticket.setCustomer(user);
         ticket.setSession(session);
-        ticket.setRow(purchaseTicketDto.getRow());
-        ticket.setPlace(purchaseTicketDto.getPlace());
+        ticket.setRow(purchaseTicket.getRow());
+        ticket.setPlace(purchaseTicket.getPlace());
 
         return ticketRepository.save(ticket).getId();
     }

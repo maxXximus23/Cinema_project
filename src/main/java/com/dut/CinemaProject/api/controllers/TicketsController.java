@@ -1,7 +1,6 @@
 package com.dut.CinemaProject.api.controllers;
 
-import com.dut.CinemaProject.api.controllers.models.Tickets.PurchaseTicket;
-import com.dut.CinemaProject.dto.Ticket.PurchaseTicketDto;
+import com.dut.CinemaProject.dto.Ticket.PurchaseTicket;
 import com.dut.CinemaProject.dto.Ticket.TicketDto;
 import com.dut.CinemaProject.exceptions.ItemNotFoundException;
 import com.dut.CinemaProject.services.interfaces.ITicketService;
@@ -37,7 +36,7 @@ public class TicketsController {
     public ResponseEntity<PurchaseTicket> purchaseTicket(@RequestBody PurchaseTicket purchaseTicket,
                                                          UriComponentsBuilder uriComponentBuilder){
         try {
-            Long createdId = ticketService.purchaseTicket(new PurchaseTicketDto(purchaseTicket));
+            Long createdId = ticketService.purchaseTicket(purchaseTicket);
             UriComponents uriComponents =
                     uriComponentBuilder.path("/ticket/{id}").buildAndExpand(createdId);
             var location = uriComponents.toUri();
@@ -51,7 +50,7 @@ public class TicketsController {
             return new ResponseEntity(unsupportedOperationException.getMessage(), HttpStatus.BAD_REQUEST);
         }
         catch (IllegalStateException illegalStateException){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
 }
