@@ -17,8 +17,8 @@ public class SessionService implements ISessionService {
 
     @Override
     public List<SessionDto> getActualSessions() {
-       return sessionRepository.findAll().stream()
-               .filter(e -> e.getDate().isAfter(LocalDateTime.now()))
+       return sessionRepository.getActualSessions()
+               .stream()
                .map(SessionDto::new)
                .collect(Collectors.toList());
     }
