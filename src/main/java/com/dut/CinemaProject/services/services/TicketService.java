@@ -6,17 +6,16 @@ import com.dut.CinemaProject.dao.repos.UserRepository;
 import com.dut.CinemaProject.dto.Ticket.TicketDto;
 import com.dut.CinemaProject.exceptions.ItemNotFoundException;
 import com.dut.CinemaProject.services.interfaces.ITicketService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
 public class TicketService implements ITicketService {
-    @Autowired
     private TicketRepository ticketRepository;
-    @Autowired
     private UserRepository userRepository;
 
 
