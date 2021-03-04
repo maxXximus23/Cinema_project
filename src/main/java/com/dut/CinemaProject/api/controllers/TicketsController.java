@@ -1,7 +1,7 @@
 package com.dut.CinemaProject.api.controllers;
 
 import com.dut.CinemaProject.dto.Ticket.TicketDto;
-import com.dut.CinemaProject.services.exceptions.ItemNotFoundException;
+import com.dut.CinemaProject.exceptions.ItemNotFoundException;
 import com.dut.CinemaProject.services.interfaces.ITicketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,11 +20,6 @@ public class TicketsController {
 
     @GetMapping("user/{id}")
     public ResponseEntity<List<TicketDto>> getByUser(@PathVariable Long id){
-        try{
-            return ResponseEntity.ok(ticketService.getUsersTickets(id));
-        }
-        catch (ItemNotFoundException ex){
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok(ticketService.getUsersTickets(id));
     }
 }

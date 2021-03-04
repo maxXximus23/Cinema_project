@@ -4,7 +4,7 @@ import com.dut.CinemaProject.dao.domain.User;
 import com.dut.CinemaProject.dao.repos.TicketRepository;
 import com.dut.CinemaProject.dao.repos.UserRepository;
 import com.dut.CinemaProject.dto.Ticket.TicketDto;
-import com.dut.CinemaProject.services.exceptions.ItemNotFoundException;
+import com.dut.CinemaProject.exceptions.ItemNotFoundException;
 import com.dut.CinemaProject.services.interfaces.ITicketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
