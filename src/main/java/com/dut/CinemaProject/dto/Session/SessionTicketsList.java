@@ -1,11 +1,12 @@
 package com.dut.CinemaProject.dto.Session;
 
+import com.dut.CinemaProject.dto.Ticket.Place;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.HashMap;
+import java.util.List;
 
 @Getter
 @Setter
@@ -15,5 +16,5 @@ public class SessionTicketsList {
     private Long sessionId;
     private Integer rowsAmount;
     private Integer place;
-    private HashMap<Integer, Integer> tickets;
+    private List<Place> tickets;
 }
