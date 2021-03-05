@@ -23,4 +23,11 @@ public class SessionController {
     public ResponseEntity<List<SessionDto>> getActual(){
         return ResponseEntity.ok(sessionService.getActualSessions());
     }
+  
+    @GetMapping("/{id}/tickets")
+    @ResponseStatus(HttpStatus.OK)
+    public SessionTicketsList getTicketsList(@PathVariable Long id){
+        return sessionService.getSessionTicketsData(id);
+    }
+
 }
