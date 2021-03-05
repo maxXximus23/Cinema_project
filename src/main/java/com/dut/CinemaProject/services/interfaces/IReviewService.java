@@ -1,12 +1,10 @@
 package com.dut.CinemaProject.services.interfaces;
 
 import com.dut.CinemaProject.dao.domain.Review;
-
-import java.util.Optional;
-
+import com.dut.CinemaProject.dto.Review.NewReview;
 
 public interface IReviewService {
 
-    void createReview(Review review);
-    Optional<Review> getById(Long id);
+    Long createReview(NewReview newReview);
+    Review getById(Long id);
 }
