@@ -3,10 +3,8 @@ package com.dut.CinemaProject.api.controllers;
 import com.dut.CinemaProject.dto.Session.SessionTicketsList;
 import com.dut.CinemaProject.services.interfaces.ISessionService;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("sessions")
@@ -15,6 +13,7 @@ public class SessionController {
     private ISessionService sessionService;
 
     @GetMapping("/{id}/tickets")
+    @ResponseStatus(HttpStatus.OK)
     public SessionTicketsList getTicketsList(@PathVariable Long id){
         return sessionService.getSessionTicketsData(id);
     }
