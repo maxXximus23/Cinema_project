@@ -12,7 +12,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
-import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
 
@@ -24,7 +23,7 @@ public class SessionService implements ISessionService {
     
     @Override
     public List<SessionDto> getActualSessions() {
-       return sessionRepository.getActualSessions()
+        return sessionRepository.getActualSessions()
                .stream()
                .map(SessionDto::new)
                .collect(Collectors.toList());
