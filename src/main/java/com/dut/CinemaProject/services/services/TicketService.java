@@ -1,27 +1,25 @@
 package com.dut.CinemaProject.services.services;
 
+import com.dut.CinemaProject.services.exceptions.ItemNotFoundException;
 import com.dut.CinemaProject.services.interfaces.ITicketService;
 import com.dut.CinemaProject.dao.domain.Ticket;
 import com.dut.CinemaProject.dao.repos.TicketRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
+@AllArgsConstructor
 public class TicketService implements ITicketService {
-    @Autowired
-    TicketRepository ticketRepository;
+
+    private final TicketRepository ticketRepository;
 
     @Override
-    public Optional<Ticket> getTicketById(Long id) {
-        return ticketRepository.findById(id);
+    public Ticket getTicketById(Long id) {
+        return ticketRepository.findById(id).orElseThrow(ItemNotFoundException::new);
     }
 
     @Override
     public void deleteTicket(Long id) {
-        var ticket = ticketRepository.findById(id);
-        if(ticket.isPresent())
-            ticketRepository.deleteById(id);
+        ticketRepository.delete(getTicketById(id));
     }
 }
