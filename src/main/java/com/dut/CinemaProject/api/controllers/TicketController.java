@@ -9,11 +9,10 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("ticket")
 @AllArgsConstructor
 public class TicketController {
-
     private final ITicketService ticketService;
 
     @DeleteMapping("/delete/{id}")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void cancelBooking(@PathVariable Long id){
         ticketService.deleteTicket(id);
     }

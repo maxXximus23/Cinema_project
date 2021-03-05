@@ -1,8 +1,8 @@
 package com.dut.CinemaProject.services.interfaces;
 
-import com.dut.CinemaProject.dao.domain.Ticket;
+import com.dut.CinemaProject.dto.Ticket.TicketDto;
 
 public interface ITicketService {
-    Ticket getTicketById(Long id);
+    TicketDto getTicketById(Long id);
     void deleteTicket(Long id);
 }
