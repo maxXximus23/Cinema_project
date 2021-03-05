@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface SessionRepository extends JpaRepository<Session, Long> {
-    @Query("SELECT * FROM Sessions WHERE date > NOW()")
+    @Query("SELECT s FROM Session s WHERE s.date > NOW()")
     List<Session> getActualSessions();
 }
