@@ -12,11 +12,18 @@ import java.util.List;
 @RequestMapping("tickets")
 @AllArgsConstructor
 public class TicketsController {
-    private ITicketService ticketService;
+    private final ITicketService ticketService;
+
+    @DeleteMapping("/delete/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void cancelBooking(@PathVariable Long id){
+        ticketService.deleteTicket(id);
+    }
 
     @GetMapping("user/{id}")
     @ResponseStatus(HttpStatus.OK)
     public List<TicketDto> getByUser(@PathVariable Long id){
         return ticketService.getUsersTickets(id);
     }
+
 }

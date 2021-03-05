@@ -18,8 +18,8 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 public class SessionService implements ISessionService {
-    private SessionRepository sessionRepository;
-    private TicketRepository ticketRepository;
+    private final SessionRepository sessionRepository;
+    private final TicketRepository ticketRepository;
     
     @Override
     public List<SessionDto> getActualSessions() {
