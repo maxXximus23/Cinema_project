@@ -13,7 +13,6 @@ import java.util.List;
 @RequestMapping("review")
 @AllArgsConstructor
 public class ReviewController {
-
     private final IReviewService reviewService;
 
     @GetMapping("/{id}")

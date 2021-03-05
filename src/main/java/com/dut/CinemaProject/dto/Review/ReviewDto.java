@@ -16,6 +16,7 @@ public class ReviewDto {
         this.id = review.getId();
         this.movieId = review.getMovie().getId();
         this.authorId = review.getAuthor().getId();
+        this.authorName = review.getAuthor().getName();
         this.text = review.getText();
         this.creationDate = review.getCreationDate();
     }
@@ -26,4 +27,5 @@ public class ReviewDto {
     private LocalDateTime creationDate;
     private Long movieId;
     private Long authorId;
+    private String authorName;
 }
