@@ -5,6 +5,7 @@ import com.dut.CinemaProject.dao.domain.Ticket;
 import com.dut.CinemaProject.dao.repos.SessionRepository;
 import com.dut.CinemaProject.dao.repos.TicketRepository;
 import com.dut.CinemaProject.dto.Session.SessionTicketsList;
+import com.dut.CinemaProject.dto.Ticket.Place;
 import com.dut.CinemaProject.exceptions.ItemNotFoundException;
 import com.dut.CinemaProject.dto.Session.SessionDto;
 import com.dut.CinemaProject.services.interfaces.ISessionService;
@@ -36,10 +37,9 @@ public class SessionService implements ISessionService {
 
         List<Ticket> list = ticketRepository.findTicketsBySession(sessionDb);
 
-        HashMap<Integer, Integer> tickets = new HashMap<>();
-
-        for (Ticket t: list)
-            tickets.put(t.getRow(), t.getPlace());
+        List<Place> tickets = list.stream()
+                .map(ticket -> new Place(ticket.getRow(), ticket.getPlace()))
+                .collect(Collectors.toList());
 
         return new SessionTicketsList(sessionId, sessionDb.getHall().getRowsAmount(),
                                     sessionDb.getHall().getPlaces(), tickets);
