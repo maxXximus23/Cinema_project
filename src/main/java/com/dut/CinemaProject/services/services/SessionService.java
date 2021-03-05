@@ -6,18 +6,30 @@ import com.dut.CinemaProject.dao.repos.SessionRepository;
 import com.dut.CinemaProject.dao.repos.TicketRepository;
 import com.dut.CinemaProject.dto.Session.SessionTicketsList;
 import com.dut.CinemaProject.exceptions.ItemNotFoundException;
+import com.dut.CinemaProject.dto.Session.SessionDto;
 import com.dut.CinemaProject.services.interfaces.ISessionService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.util.HashMap;
 import java.util.List;
+import java.time.LocalDateTime;
+import java.util.stream.Collectors;
+
 
 @Service
 @AllArgsConstructor
 public class SessionService implements ISessionService {
     private SessionRepository sessionRepository;
     private TicketRepository ticketRepository;
+    
+    @Override
+    public List<SessionDto> getActualSessions() {
+       return sessionRepository.getActualSessions()
+               .stream()
+               .map(SessionDto::new)
+               .collect(Collectors.toList());
+    }
+    
     @Override
     public SessionTicketsList getSessionTicketsData(Long sessionId) {
         Session sessionDb = sessionRepository.findById(sessionId)
@@ -32,5 +44,5 @@ public class SessionService implements ISessionService {
 
         return new SessionTicketsList(sessionId, sessionDb.getHall().getRowsAmount(),
                                     sessionDb.getHall().getPlaces(), tickets);
-    }
+   }
 }
