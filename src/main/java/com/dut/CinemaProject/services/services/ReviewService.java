@@ -1,16 +1,20 @@
 package com.dut.CinemaProject.services.services;
 
+import com.dut.CinemaProject.dao.domain.Movie;
 import com.dut.CinemaProject.dao.domain.Review;
 import com.dut.CinemaProject.dao.repos.MovieRepository;
 import com.dut.CinemaProject.dao.repos.ReviewRepository;
 import com.dut.CinemaProject.dao.repos.UserRepository;
 import com.dut.CinemaProject.dto.Review.NewReview;
+import com.dut.CinemaProject.dto.Review.ReviewDto;
 import com.dut.CinemaProject.services.exceptions.BadRequestException;
 import com.dut.CinemaProject.services.exceptions.ItemNotFoundException;
 import com.dut.CinemaProject.services.interfaces.IReviewService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -41,8 +45,14 @@ public class ReviewService implements IReviewService {
     }
 
     @Override
-    public Review getById(Long id) {
-        return reviewRepository.findById(id).orElseThrow(ItemNotFoundException::new);
+    public ReviewDto getById(Long id) {
+        return new ReviewDto(reviewRepository.findById(id)
+                .orElseThrow(() -> new com.dut.CinemaProject.exceptions.ItemNotFoundException("Review not found")));
     }
 
+    @Override
+    public List<ReviewDto> getReviewsByMovie(Long movieId) {
+        Movie movie = movieRepository.findById(movieId).orElseThrow(ItemNotFoundException::new);
+        return reviewRepository.findReviewsByMovie(movie).stream().map(ReviewDto::new).collect(Collectors.toList());
+    }
 }
