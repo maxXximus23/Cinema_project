@@ -1,0 +1,42 @@
+package com.dut.CinemaProject.api.controllers;
+
+
+import com.dut.CinemaProject.dto.Movie.MovieDto;
+import com.dut.CinemaProject.dto.Movie.NewMovie;
+import com.dut.CinemaProject.dto.Movie.UpdateMovieData;
+import com.dut.CinemaProject.services.interfaces.IMovieService;
+import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("movie")
+@AllArgsConstructor
+public class MovieController {
+
+    private final IMovieService movieService;
+
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public MovieDto getById(@PathVariable Long id){
+        return movieService.getMovieById(id);
+    }
+
+    @PostMapping("/add")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Long addMovie(@RequestBody NewMovie newMovie){
+        return movieService.createMovie(newMovie);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteMovie(@PathVariable Long id){
+        movieService.deleteMovie(id);
+    }
+
+    @PutMapping("/update")
+    @ResponseStatus(HttpStatus.OK)
+    public MovieDto updateMovie(@RequestBody UpdateMovieData movie){
+        return  movieService.updateMovie(movie);
+    }
+}

@@ -7,8 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class UpdateMovieData {
-    private Long id;
+public class NewMovie {
     private String title;
     private String description;
     private String posterPath;
