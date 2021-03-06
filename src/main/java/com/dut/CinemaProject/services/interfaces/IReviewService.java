@@ -9,4 +9,5 @@ public interface IReviewService {
     Long createReview(NewReview newReview);
     ReviewDto getById(Long id);
     List<ReviewDto> getReviewsByMovie(Long movieId);
+    void deleteReview(Long id);
 }

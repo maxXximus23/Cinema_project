@@ -32,4 +32,10 @@ public class ReviewController {
     public Long addReview(@RequestBody NewReview newReview){
         return reviewService.createReview(newReview);
     }
+
+    @DeleteMapping("/delete/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteComment(@PathVariable Long id){
+        reviewService.deleteReview(id);
+    }
 }
