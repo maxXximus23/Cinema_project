@@ -20,7 +20,6 @@ public class SessionDto {
         this.moviePoster = session.getMovie().getPosterPath();
         this.hallName = session.getHall().getName();
         this.date = session.getDate();
-        this.description = session.getMovie().getDescription();
     }
 
     private Long id;
@@ -31,5 +30,4 @@ public class SessionDto {
     private String hallName;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm dd-MM-yyyy")
     private LocalDateTime date;
-    private String description;
 }
