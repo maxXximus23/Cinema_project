@@ -2,6 +2,7 @@ package com.dut.CinemaProject.dto.Session;
 
 import com.dut.CinemaProject.dao.domain.Session;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,6 +10,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
+@AllArgsConstructor
 public class SessionDto {
     public SessionDto(Session session){
         this.id = session.getId();
@@ -18,6 +20,7 @@ public class SessionDto {
         this.moviePoster = session.getMovie().getPosterPath();
         this.hallName = session.getHall().getName();
         this.date = session.getDate();
+        this.description = session.getMovie().getDescription();
     }
 
     private Long id;
@@ -28,4 +31,5 @@ public class SessionDto {
     private String hallName;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm dd-MM-yyyy")
     private LocalDateTime date;
+    private String description;
 }
