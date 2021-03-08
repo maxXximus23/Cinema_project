@@ -75,7 +75,7 @@ public class SessionService implements ISessionService {
                         .orElseThrow(() -> new BadRequestException("There is no movie with given ID")
                 );
 
-        if (!isDateAcceptable(sessionData.getHallId(), sessionData.getDate()))
+        if (!isDateAcceptable(sessionData.getHallId(), sessionData.getDate(), movieDb.getDuration()))
             throw new BadRequestException("Invalid date");
 
         Session session = new Session();
@@ -116,7 +116,7 @@ public class SessionService implements ISessionService {
                         .orElseThrow(() -> new BadRequestException("There is no movie with given ID"))
         );
 
-        if (!isDateAcceptable(sessionData.getHallId(), sessionData.getDate()))
+        if (!isDateAcceptable(sessionData.getHallId(), sessionData.getDate(), session.getMovie().getDuration()))
             throw new BadRequestException("Invalid date");
         else
             session.setDate(sessionData.getDate());
@@ -124,14 +124,22 @@ public class SessionService implements ISessionService {
         return new SessionDto(sessionRepository.save(session));
     }
 
-    private Boolean isDateAcceptable(Long hallId, LocalDateTime date){
+    private Boolean isDateAcceptable(Long hallId, LocalDateTime date, Integer movieDuration){
         if (date.isBefore(LocalDateTime.now()))
             return false;
 
-        List<Session> sessions = sessionRepository.findSessionsByHall(hallRepository.getOne(hallId));
+        List<Session> sessions = sessionRepository.getActualSessionsByHallId(hallId);
 
         for (Session session : sessions){
-            if (session.getDate().plusSeconds(session.getMovie().getDuration()).isAfter(date))
+            if ((session.getDate()
+                    .plusSeconds(session.getMovie()
+                            .getDuration())
+                    .isAfter(date)
+                && session.getDate()
+                    .isBefore(date))
+            || (date.isBefore(session.getDate())
+                && date.plusSeconds(movieDuration)
+                    .isAfter(session.getDate())))
                 return false;
         }
         return true;
