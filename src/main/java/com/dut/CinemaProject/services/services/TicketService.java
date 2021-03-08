@@ -9,6 +9,7 @@ import com.dut.CinemaProject.dao.repos.UserRepository;
 import com.dut.CinemaProject.dto.Ticket.PurchaseTicket;
 import com.dut.CinemaProject.dto.Ticket.TicketDto;
 import com.dut.CinemaProject.exceptions.ItemNotFoundException;
+import com.dut.CinemaProject.exceptions.ValidationException;
 import com.dut.CinemaProject.services.interfaces.ITicketService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -51,10 +52,10 @@ public class TicketService implements ITicketService {
                 .orElseThrow(ItemNotFoundException::new);
 
         if(session.getHall().getRowsAmount() < purchaseTicket.getRow())
-            throw new UnsupportedOperationException("Row out of bounce");
+            throw new ValidationException("Row out of bounce");
 
         if(session.getHall().getPlaces() < purchaseTicket.getPlace())
-            throw new UnsupportedOperationException("Place out of bounce");
+            throw new ValidationException("Place out of bounce");
 
         User user = userRepository.findById(purchaseTicket.getUserId())
                 .orElseThrow(ItemNotFoundException::new);
@@ -63,7 +64,7 @@ public class TicketService implements ITicketService {
                 purchaseTicket.getRow(), purchaseTicket.getSessionId());
 
         if(existingTicket.isPresent())
-            throw new UnsupportedOperationException("Requested ticket is sold out");
+            throw new ValidationException("Requested ticket is sold out");
 
         Ticket ticket = new Ticket();
         ticket.setCustomer(user);

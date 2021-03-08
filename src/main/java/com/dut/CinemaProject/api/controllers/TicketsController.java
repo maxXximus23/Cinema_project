@@ -2,14 +2,10 @@ package com.dut.CinemaProject.api.controllers;
 
 import com.dut.CinemaProject.dto.Ticket.PurchaseTicket;
 import com.dut.CinemaProject.dto.Ticket.TicketDto;
-import com.dut.CinemaProject.exceptions.ItemNotFoundException;
 import com.dut.CinemaProject.services.interfaces.ITicketService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.util.UriComponents;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 
@@ -33,24 +29,7 @@ public class TicketsController {
 
     @PostMapping("purchase")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<PurchaseTicket> purchaseTicket(@RequestBody PurchaseTicket purchaseTicket,
-                                                         UriComponentsBuilder uriComponentBuilder){
-        try {
-            Long createdId = ticketService.purchaseTicket(purchaseTicket);
-            UriComponents uriComponents =
-                    uriComponentBuilder.path("/ticket/{id}").buildAndExpand(createdId);
-            var location = uriComponents.toUri();
-            return ResponseEntity.created(location).build();
-
-        }
-        catch (ItemNotFoundException itemNotFoundException){
-            return ResponseEntity.notFound().build();
-        }
-        catch (UnsupportedOperationException unsupportedOperationException){
-            return new ResponseEntity(unsupportedOperationException.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-        catch (IllegalStateException illegalStateException){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
+    public Long purchaseTicket(@RequestBody PurchaseTicket purchaseTicket){
+        return ticketService.purchaseTicket(purchaseTicket);
     }
 }
