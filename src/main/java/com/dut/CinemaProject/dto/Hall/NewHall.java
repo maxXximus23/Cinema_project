@@ -7,8 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class UpdateHallData {
-    private Long id;
+public class NewHall {
     private String name;
     private Integer rowsAmount;
     private Integer places;
