@@ -57,6 +57,9 @@ public class TicketService implements ITicketService {
         if(session.getHall().getPlaces() < purchaseTicket.getPlace())
             throw new ValidationException("Place out of bounce");
 
+        if(ticketRepository.countTicketsByUserId(purchaseTicket.getUserId()) >= 10)
+            throw new ValidationException("User can't buy tickets more than 10!");
+
         User user = userRepository.findById(purchaseTicket.getUserId())
                 .orElseThrow(ItemNotFoundException::new);
 
