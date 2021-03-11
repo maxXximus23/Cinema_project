@@ -8,10 +8,9 @@ import com.dut.CinemaProject.dao.repos.HallRepository;
 import com.dut.CinemaProject.dao.repos.MovieRepository;
 import com.dut.CinemaProject.dao.repos.SessionRepository;
 import com.dut.CinemaProject.dao.repos.TicketRepository;
-import com.dut.CinemaProject.dto.Session.NewSession;
+import com.dut.CinemaProject.dto.Session.SessionData;
 import com.dut.CinemaProject.dto.Session.SessionDto;
 import com.dut.CinemaProject.dto.Session.SessionTicketsList;
-import com.dut.CinemaProject.dto.Session.UpdateSessionData;
 import com.dut.CinemaProject.dto.Ticket.Place;
 import com.dut.CinemaProject.exceptions.BadRequestException;
 import com.dut.CinemaProject.exceptions.ItemNotFoundException;
@@ -64,7 +63,7 @@ public class SessionService implements ISessionService {
     }
 
     @Override
-    public Long createSession(NewSession sessionData) {
+    public Long createSession(SessionData sessionData) {
         Hall hallDb = hallRepository.findById(
                     sessionData.getHallId())
                         .orElseThrow(() -> new BadRequestException("There is no hall with given ID")
@@ -96,7 +95,7 @@ public class SessionService implements ISessionService {
     }
 
     @Override
-    public SessionDto updateSession(Long id, UpdateSessionData sessionData) {
+    public SessionDto updateSession(Long id, SessionData sessionData) {
         Session session = sessionRepository.findById(id)
                     .orElseThrow(() -> new ItemNotFoundException("There is not session with given ID")
                 );
