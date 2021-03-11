@@ -1,5 +1,6 @@
 package com.dut.CinemaProject.api.controllers;
 
+import com.dut.CinemaProject.dto.Ticket.PurchaseTicket;
 import com.dut.CinemaProject.dto.Ticket.TicketDto;
 import com.dut.CinemaProject.services.interfaces.ITicketService;
 import lombok.AllArgsConstructor;
@@ -26,4 +27,9 @@ public class TicketsController {
         return ticketService.getUsersTickets(id);
     }
 
+    @PostMapping("purchase")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Long purchaseTicket(@RequestBody PurchaseTicket purchaseTicket){
+        return ticketService.purchaseTicket(purchaseTicket);
+    }
 }
