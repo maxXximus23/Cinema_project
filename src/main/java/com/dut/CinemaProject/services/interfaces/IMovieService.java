@@ -7,6 +7,6 @@ import com.dut.CinemaProject.dto.Movie.UpdateMovieData;
 public interface IMovieService {
     Long createMovie(NewMovie newMovie);
     void deleteMovie(Long id);
-    MovieDto updateMovie(UpdateMovieData movie);
+    MovieDto updateMovie(Long id, UpdateMovieData movie);
     MovieDto getMovieById(Long id);
 }

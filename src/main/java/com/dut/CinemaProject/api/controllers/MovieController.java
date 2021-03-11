@@ -10,7 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("movie")
+@RequestMapping("movies")
 @AllArgsConstructor
 public class MovieController {
 
@@ -34,9 +34,9 @@ public class MovieController {
         movieService.deleteMovie(id);
     }
 
-    @PutMapping("/update")
+    @PutMapping("/update/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public MovieDto updateMovie(@RequestBody UpdateMovieData movie){
-        return  movieService.updateMovie(movie);
+    public MovieDto updateMovie(@PathVariable Long id, @RequestBody UpdateMovieData movie){
+        return  movieService.updateMovie(id, movie);
     }
 }
