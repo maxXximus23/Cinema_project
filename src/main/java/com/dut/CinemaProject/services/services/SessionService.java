@@ -97,9 +97,6 @@ public class SessionService implements ISessionService {
 
     @Override
     public SessionDto updateSession(Long id, UpdateSessionData sessionData) {
-        if (id.equals(sessionData.getId()))
-            throw new BadRequestException("Given IDs are not equal");
-
         Session session = sessionRepository.findById(id)
                     .orElseThrow(() -> new ItemNotFoundException("There is not session with given ID")
                 );
