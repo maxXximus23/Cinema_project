@@ -19,12 +19,12 @@ public class UserService implements IUserService {
     public void changeUserPasswordById(Long userId, String newPassword, String oldPassword) {
         User user = userRepository.findById(userId).orElseThrow(ItemNotFoundException::new);
 
-        if(oldPassword != user.getPassword()){
+        if(!oldPassword.equals(user.getPassword())){
             throw new ValidationException("Password doesn't match");
         }
 
         if(newPassword.length() > 32){
-            throw new ValidationException("Password length is more than can be");
+            throw new ValidationException("Password length must not be more than 32");
         }
 
         user.setPassword(newPassword);

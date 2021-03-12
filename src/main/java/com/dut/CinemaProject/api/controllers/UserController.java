@@ -1,6 +1,7 @@
 package com.dut.CinemaProject.api.controllers;
 
 import com.dut.CinemaProject.dto.Ticket.PurchaseTicket;
+import com.dut.CinemaProject.dto.User.ChangePassword;
 import com.dut.CinemaProject.dto.User.UserDto;
 import com.dut.CinemaProject.services.interfaces.IAccountService;
 import com.dut.CinemaProject.services.interfaces.IUserService;
@@ -24,7 +25,7 @@ public class UserController {
 
     @PostMapping("{userId}/changePassword")
     @ResponseStatus(HttpStatus.OK)
-    public void changePassword(@PathVariable Long userId, String newPassword, String oldPassword){
-        userService.changeUserPasswordById(userId, newPassword, oldPassword);
+    public void changePassword(@PathVariable Long userId, @RequestBody ChangePassword changePassword){
+        userService.changeUserPasswordById(userId, changePassword.getNewPassword(), changePassword.getOldPassword());
     }
 }
