@@ -1,11 +1,13 @@
 package com.dut.CinemaProject.dto.Movie;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class UpdateMovieData {
+@AllArgsConstructor
+public class NewMovie {
     private String title;
     private String description;
     private String posterPath;
