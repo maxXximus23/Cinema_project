@@ -56,4 +56,10 @@ public class ReviewService implements IReviewService {
         Movie movie = movieRepository.findById(movieId).orElseThrow(ItemNotFoundException::new);
         return reviewRepository.findReviewsByMovie(movie).stream().map(ReviewDto::new).collect(Collectors.toList());
     }
+
+    @Override
+    public void deleteReview(Long id) {
+        Review review = reviewRepository.findById(id).orElseThrow(ItemNotFoundException::new);
+        reviewRepository.delete(review);
+    }
 }
