@@ -3,9 +3,11 @@ package com.dut.CinemaProject.api.controllers;
 import com.dut.CinemaProject.dto.Ticket.PurchaseTicket;
 import com.dut.CinemaProject.dto.User.ChangePassword;
 import com.dut.CinemaProject.dto.User.UserDto;
+import com.dut.CinemaProject.exceptions.ValidationException;
 import com.dut.CinemaProject.services.interfaces.IAccountService;
 import com.dut.CinemaProject.services.interfaces.IUserService;
 import lombok.AllArgsConstructor;
+import org.aspectj.bridge.Message;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +27,9 @@ public class UserController {
 
     @PostMapping("{userId}/changePassword")
     @ResponseStatus(HttpStatus.OK)
-    public void changePassword(@PathVariable Long userId, @RequestBody ChangePassword changePassword){
-        userService.changeUserPasswordById(userId, changePassword.getNewPassword(), changePassword.getOldPassword());
+    public String changePassword(@PathVariable Long userId, @RequestBody ChangePassword changePassword){
+        return userService.changeUserPasswordById(userId, changePassword.getNewPassword(),
+                changePassword.getOldPassword());
+
     }
 }
