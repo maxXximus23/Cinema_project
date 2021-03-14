@@ -1,13 +1,11 @@
 package com.dut.CinemaProject.dto.Hall;
 
 import com.dut.CinemaProject.dao.domain.Hall;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-@AllArgsConstructor
 public class HallDto {
 
     public HallDto(Hall hall) {

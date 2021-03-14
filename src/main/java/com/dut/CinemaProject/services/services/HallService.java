@@ -1,3 +1,4 @@
+package com.dut.CinemaProject.services.services;
 
 import com.dut.CinemaProject.dao.domain.Hall;
 import com.dut.CinemaProject.dao.repos.HallRepository;
@@ -18,12 +19,14 @@ public class HallService implements IHallService {
 
     @Override
     public Long createHall(NewHall newHall) {
-        if(newHall.getName().isBlank() || newHall.getPlaces() < 1 ||newHall.getRowsAmount() < 1)
-            throw new BadRequestException("No information");
+        if(newHall.getName().isBlank() || newHall.getPlaces() < 1 || newHall.getRowsAmount() < 1)
+            throw new BadRequestException("Invalid info about the Hall");
+        else if (hallRepository.findByName(newHall.getName()).size() > 0)
+            throw new BadRequestException("This name is already used");
 
         Hall hall = new Hall();
         hall.setName(newHall.getName());
-        hall.setRowsAmount(hall.getRowsAmount());
+        hall.setRowsAmount(newHall.getRowsAmount());
         hall.setPlaces(newHall.getPlaces());
 
         return hallRepository.save(hall).getId();
@@ -33,16 +36,35 @@ public class HallService implements IHallService {
     public void deleteHall(Long id) {
         Hall hall = hallRepository.findById(id).orElseThrow(() -> new ItemNotFoundException("Hall is not found"));
         hallRepository.delete(hall);
-
     }
 
     @Override
-    public HallDto updateHall(UpdateHallData hall) {
-        Hall updateHall = hallRepository.findById(hall.getId()).orElseThrow(() -> new ItemNotFoundException("Hall is not found"));
+    public HallDto updateHall(Long id, UpdateHallData hall) {
+        Hall updateHall = hallRepository.findById(id).orElseThrow(() -> new ItemNotFoundException("Hall is not found"));
 
-        updateHall.setName(hall.getName());
-        updateHall.setRowsAmount(hall.getRowsAmount());
-        updateHall.setPlaces(hall.getPlaces());
+        if(hall.getName() != null){
+            if(hall.getName().isBlank())
+                throw new BadRequestException("Name can`t be empty");
+            else if(hallRepository.findByName(hall.getName()).size() > 0)
+                throw new BadRequestException("This name is already used");
+            else
+                updateHall.setName(hall.getName());
+        }
+
+        if(hall.getRowsAmount() != null) {
+            if (hall.getRowsAmount() < 1)
+                throw new BadRequestException("Rows amount can`t be less than 1");
+            else
+                updateHall.setRowsAmount(hall.getRowsAmount());
+        }
+
+
+        if(hall.getPlaces() != null) {
+            if (hall.getPlaces() < 1)
+                throw new BadRequestException("Places amount can`t be less than 1");
+            else
+                updateHall.setPlaces(hall.getPlaces());
+        }
 
         return new HallDto(hallRepository.save(updateHall));
     }

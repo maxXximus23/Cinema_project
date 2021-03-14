@@ -14,7 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("hall")
+@RequestMapping("halls")
 @AllArgsConstructor
 public class HallController {
 
@@ -38,9 +38,9 @@ public class HallController {
         hallService.deleteHall(id);
     }
 
-    @PutMapping("/update")
+    @PutMapping("/{id}/update")
     @ResponseStatus(HttpStatus.OK)
-    public HallDto updateHall(@RequestBody UpdateHallData hall){
-        return  hallService.updateHall(hall);
+    public HallDto updateHall(@PathVariable Long id, @RequestBody UpdateHallData hall){
+        return  hallService.updateHall(id, hall);
     }
 }
