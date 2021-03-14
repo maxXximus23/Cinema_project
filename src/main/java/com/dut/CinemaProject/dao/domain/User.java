@@ -1,5 +1,6 @@
 package com.dut.CinemaProject.dao.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
@@ -20,7 +21,9 @@ public class User {
     private String firstName;
     private String lastName;
 
+    @Column(unique = true)
     private String email;
+
     private String password;
 
     @CreatedDate
@@ -32,6 +35,7 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Status status;
 
+    @JsonIgnore
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_roles",
     joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},

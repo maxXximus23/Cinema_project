@@ -2,7 +2,6 @@ package com.dut.CinemaProject.security;
 
 import com.dut.CinemaProject.dao.domain.User;
 import com.dut.CinemaProject.dao.repos.UserRepository;
-import com.dut.CinemaProject.security.jwt.JwtUser;
 import com.dut.CinemaProject.security.jwt.JwtUserFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -29,8 +28,6 @@ public class JwtUserDetailsService implements UserDetailsService {
             throw new UsernameNotFoundException("User with username: " + username + " not found");
         }
 
-        JwtUser jwtUser = JwtUserFactory.create(user);
-        log.info("IN loadUserByUsername - user with username: {} successfully loaded", username);
-        return jwtUser;
+        return JwtUserFactory.create(user);
     }
 }

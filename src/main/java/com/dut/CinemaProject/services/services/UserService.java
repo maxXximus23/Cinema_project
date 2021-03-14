@@ -6,8 +6,12 @@ import com.dut.CinemaProject.dao.domain.User;
 import com.dut.CinemaProject.dao.repos.RoleRepository;
 import com.dut.CinemaProject.dao.repos.UserRepository;
 import com.dut.CinemaProject.dto.User.AuthenticationRequestDto;
+import com.dut.CinemaProject.dto.User.UserDto;
+import com.dut.CinemaProject.exceptions.EmailAlreadyExistsException;
+import com.dut.CinemaProject.exceptions.UserNotFoundException;
 import com.dut.CinemaProject.security.jwt.JwtTokenProvider;
 import com.dut.CinemaProject.services.interfaces.IUserService;
+import com.dut.CinemaProject.services.mapper.UserMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -17,10 +21,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDate;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -28,15 +30,16 @@ public class UserService implements IUserService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
-    private final BCryptPasswordEncoder passwordEncoder;
 
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
 
-    public UserService(UserRepository userRepository, RoleRepository roleRepository, BCryptPasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider) {
+    public UserService(UserRepository userRepository,
+                       RoleRepository roleRepository,
+                       AuthenticationManager authenticationManager,
+                       JwtTokenProvider jwtTokenProvider) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
-        this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
         this.jwtTokenProvider = jwtTokenProvider;
     }
@@ -68,53 +71,49 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public User register(User user) {
+    public User register(UserDto userDto) {
+
+        if(!isEmailFree(userDto))
+            throw new EmailAlreadyExistsException("This email is already registered");
+
+
         Role roleUser = roleRepository.findByName("ROLE_USER");
         List<Role> userRoles = new ArrayList<>();
         userRoles.add(roleUser);
 
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        User user = UserMapper.userFromDto(userDto);
+
         user.setRoles(userRoles);
         user.setStatus(Status.ACTIVE);
+        user.setCreated(new Date());
 
-        User registeredUser = userRepository.save(user);
-
-        log.info("IN register - user: {} successfully registered", registeredUser);
-
-        return registeredUser;
+        return userRepository.save(user);
     }
 
     @Override
     public List<User> getAll() {
-        List<User> result = userRepository.findAll();
-        log.info("IN getAll - {} users found", result.size());
-        return result;
+        return userRepository.findAll();
     }
 
     @Override
     public User findByEmail(String email) {
-        User result = userRepository.findByEmail(email);
-        log.info("IN findByUsername - user: {} found by username: {}", result, email);
-        return result;
+        return userRepository.findByEmail(email);
     }
 
     @Override
     public User findById(Long id) {
-        User result = userRepository.findById(id).orElse(null);
-
-        if (result == null) {
-            log.warn("IN findById - no user found by id: {}", id);
-            return null;
-        }
-
-        log.info("IN findById - user: {} found by id: {}", result);
-        return result;
+       return userRepository.findById(id)
+               .orElseThrow(() -> new UserNotFoundException("No such user in database"));
     }
 
     @Override
     public void delete(Long id) {
         userRepository.deleteById(id);
-        log.info("IN delete - user with id: {} successfully deleted");
+    }
+
+    private boolean isEmailFree(UserDto userDto){
+        Optional<User> user = Optional.ofNullable(userRepository.findByEmail(userDto.getEmail()));
+        return user.isEmpty();
     }
 }
 
