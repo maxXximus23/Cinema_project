@@ -29,7 +29,7 @@ public class ReviewController {
 
     @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
-    public Long addReview(@RequestBody NewReview newReview){
+    public ReviewDto addReview(@RequestBody NewReview newReview){
         return reviewService.createReview(newReview);
     }
 

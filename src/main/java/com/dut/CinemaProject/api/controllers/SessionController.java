@@ -36,7 +36,7 @@ public class SessionController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Long addSession(@RequestBody SessionData sessionData){
+    public SessionDto addSession(@RequestBody SessionData sessionData){
         return sessionService.createSession(sessionData);
     }
 

@@ -11,7 +11,7 @@ public interface ISessionService {
     SessionDto getSession(Long id);
     List<SessionDto> getActualSessions();
 
-    Long createSession(SessionData sessionData);
+    SessionDto createSession(SessionData sessionData);
     void removeSession(Long id);
     SessionDto updateSession(Long id, SessionData sessionData);
 }

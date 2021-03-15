@@ -47,7 +47,7 @@ public class TicketService implements ITicketService {
     }
 
     @Override
-    public Long purchaseTicket(PurchaseTicket purchaseTicket) {
+    public TicketDto purchaseTicket(PurchaseTicket purchaseTicket) {
         Session session = sessionRepository.findById(purchaseTicket.getSessionId())
                 .orElseThrow(ItemNotFoundException::new);
 
@@ -75,6 +75,6 @@ public class TicketService implements ITicketService {
         ticket.setRow(purchaseTicket.getRow());
         ticket.setPlace(purchaseTicket.getPlace());
 
-        return ticketRepository.save(ticket).getId();
+        return new TicketDto(ticketRepository.save(ticket));
     }
 }

@@ -8,6 +8,7 @@ import com.dut.CinemaProject.dao.repos.ReviewRepository;
 import com.dut.CinemaProject.dao.repos.UserRepository;
 import com.dut.CinemaProject.dto.Review.NewReview;
 import com.dut.CinemaProject.dto.Review.ReviewDto;
+import com.dut.CinemaProject.dto.Ticket.TicketDto;
 import com.dut.CinemaProject.exceptions.BadRequestException;
 import com.dut.CinemaProject.exceptions.ItemNotFoundException;
 import com.dut.CinemaProject.services.interfaces.IReviewService;
@@ -26,7 +27,7 @@ public class ReviewService implements IReviewService {
     private final MovieRepository movieRepository;
 
     @Override
-    public Long createReview(NewReview newReview){
+    public ReviewDto createReview(NewReview newReview){
         User user = userRepository.findById(newReview.getAuthorId())
                 .orElseThrow(() -> new ItemNotFoundException("Such user does not exist"));
 
@@ -42,7 +43,7 @@ public class ReviewService implements IReviewService {
         review.setText(newReview.getText());
         review.setCreationDate(LocalDateTime.now());
 
-        return reviewRepository.save(review).getId();
+        return new ReviewDto(reviewRepository.save(review));
     }
 
     @Override

@@ -26,7 +26,7 @@ public class MovieController {
 
     @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
-    public Long addMovie(@RequestBody NewMovie newMovie){
+    public MovieDto addMovie(@RequestBody NewMovie newMovie){
         return movieService.createMovie(newMovie);
     }
 

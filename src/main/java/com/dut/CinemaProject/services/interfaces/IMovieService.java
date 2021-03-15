@@ -8,7 +8,7 @@ import com.dut.CinemaProject.dto.Session.SessionShort;
 import java.util.List;
 
 public interface IMovieService {
-    Long createMovie(NewMovie newMovie);
+    MovieDto createMovie(NewMovie newMovie);
     void deleteMovie(Long id);
     MovieDto updateMovie(Long id, UpdateMovieData movie);
     MovieDto getMovieById(Long id);

@@ -63,7 +63,7 @@ public class SessionService implements ISessionService {
     }
 
     @Override
-    public Long createSession(SessionData sessionData) {
+    public SessionDto createSession(SessionData sessionData) {
         Hall hallDb = hallRepository.findById(
                     sessionData.getHallId())
                         .orElseThrow(() -> new BadRequestException("There is no hall with given ID")
@@ -82,7 +82,7 @@ public class SessionService implements ISessionService {
         session.setMovie(movieDb);
         session.setDate(sessionData.getDate());
 
-        return sessionRepository.save(session).getId();
+        return new SessionDto(sessionRepository.save(session));
     }
 
     @Override

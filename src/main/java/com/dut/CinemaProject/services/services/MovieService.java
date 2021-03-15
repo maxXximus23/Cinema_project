@@ -7,6 +7,7 @@ import com.dut.CinemaProject.dto.Movie.MovieDto;
 import com.dut.CinemaProject.dto.Movie.NewMovie;
 import com.dut.CinemaProject.dto.Movie.UpdateMovieData;
 import com.dut.CinemaProject.dto.Session.SessionShort;
+import com.dut.CinemaProject.dto.Ticket.TicketDto;
 import com.dut.CinemaProject.exceptions.BadRequestException;
 import com.dut.CinemaProject.exceptions.ItemNotFoundException;
 import com.dut.CinemaProject.services.interfaces.IMovieService;
@@ -23,7 +24,7 @@ public class MovieService implements IMovieService {
     private final SessionRepository sessionRepository;
 
     @Override
-    public Long createMovie(NewMovie newMovie) {
+    public MovieDto createMovie(NewMovie newMovie) {
         if(newMovie.getTitle().isBlank() || newMovie.getDescription().isBlank() ||newMovie.getPosterPath().isBlank() ||newMovie.getTrailerPath().isBlank())
             throw new BadRequestException("Information can`t be empty");
         if(newMovie.getDuration()<=0)
@@ -36,7 +37,7 @@ public class MovieService implements IMovieService {
         movie.setPosterPath(newMovie.getPosterPath());
         movie.setDuration(newMovie.getDuration());
 
-        return movieRepository.save(movie).getId();
+        return new MovieDto(movieRepository.save(movie));
     }
 
     @Override
