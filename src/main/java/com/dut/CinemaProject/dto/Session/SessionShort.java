@@ -11,22 +11,16 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @AllArgsConstructor
-public class SessionDto {
-    public SessionDto(Session session){
+public class SessionShort {
+    public SessionShort(Session session){
         this.id = session.getId();
-        this.movieId = session.getMovie().getId();
         this.hallId = session.getHall().getId();
-        this.movieTitle = session.getMovie().getTitle();
-        this.moviePoster = session.getMovie().getPosterPath();
         this.hallName = session.getHall().getName();
         this.date = session.getDate();
     }
 
     private Long id;
-    private Long movieId;
     private Long hallId;
-    private String movieTitle;
-    private String moviePoster;
     private String hallName;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm dd-MM-yyyy")
     private LocalDateTime date;

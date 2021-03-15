@@ -29,7 +29,7 @@ public class TicketsController {
 
     @PostMapping("purchase")
     @ResponseStatus(HttpStatus.CREATED)
-    public Long purchaseTicket(@RequestBody PurchaseTicket purchaseTicket){
+    public TicketDto purchaseTicket(@RequestBody PurchaseTicket purchaseTicket){
         return ticketService.purchaseTicket(purchaseTicket);
     }
 }
