@@ -13,8 +13,8 @@ import java.util.Optional;
 public interface TicketRepository extends JpaRepository<Ticket, Long> {
     List<Ticket> findTicketsByCustomer(User customer);
     List<Ticket> findTicketsBySession(Session session);
-    @Query("SELECT COUNT(t) FROM Ticket t WHERE t.session.id = :sessionId")
-    Integer countTicketsBySessionId(Long sessionId);
+    @Query("SELECT COUNT(t) FROM Ticket t WHERE t.customer.id = :userId")
+    Integer countTicketsByUserId(Long userId);
     @Query("SELECT t FROM Ticket t WHERE t.session.id = :sessionId AND t.place = :place AND t.row = :row")
     Optional<Ticket> getTicketByDetails(Integer place, Integer row, Long sessionId);
 }
