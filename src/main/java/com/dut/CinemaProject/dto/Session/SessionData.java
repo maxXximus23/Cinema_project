@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-public class NewSession {
+public class SessionData {
     private Long movieId;
     private Long hallId;
     private LocalDateTime date;
