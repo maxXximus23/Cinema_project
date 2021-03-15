@@ -8,7 +8,8 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface SessionRepository extends JpaRepository<Session, Long> {
-    @Query("SELECT s FROM Session s WHERE s.date > NOW() GROUP BY s.movie")
+    @Query(value = "SELECT * FROM (SELECT * FROM sessions WHERE date > NOW() ORDER BY date) ses GROUP BY ses.movie_id",
+            nativeQuery = true)
     List<Session> getActualSessions();
     @Query(value="SELECT * FROM Sessions  WHERE date > NOW() AND hall_id = :hallId", nativeQuery = true)
     List<Session> getActualSessionsByHallId(@Param("hallId") Long hallId);
