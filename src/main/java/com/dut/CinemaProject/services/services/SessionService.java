@@ -34,9 +34,9 @@ public class SessionService implements ISessionService {
     @Override
     public List<SessionDto> getActualSessions() {
         return sessionRepository.getActualSessions()
-               .stream()
-               .map(SessionDto::new)
-               .collect(Collectors.toList());
+                .stream()
+                .map(SessionDto::new)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -51,8 +51,8 @@ public class SessionService implements ISessionService {
                 .collect(Collectors.toList());
 
         return new SessionTicketsList(sessionId, sessionDb.getHall().getRowsAmount(),
-                                    sessionDb.getHall().getPlaces(), tickets);
-   }
+                sessionDb.getHall().getPlaces(), tickets);
+    }
 
     @Override
     public SessionDto getSession(Long id) {
@@ -64,14 +64,19 @@ public class SessionService implements ISessionService {
 
     @Override
     public SessionDto createSession(SessionData sessionData) {
+        if (sessionData.getMovieId() == null)
+            throw new BadRequestException("Movie ID is not provided. Check your request and try again");
+        if (sessionData.getHallId() == null)
+            throw new BadRequestException("Hall ID is not provided. Check your request and try again");
+
         Hall hallDb = hallRepository.findById(
-                    sessionData.getHallId())
-                        .orElseThrow(() -> new BadRequestException("There is no hall with given ID")
+                sessionData.getHallId())
+                .orElseThrow(() -> new BadRequestException("There is no hall with given ID")
                 );
 
         Movie movieDb = movieRepository.findById(
-                    sessionData.getMovieId())
-                        .orElseThrow(() -> new BadRequestException("There is no movie with given ID")
+                sessionData.getMovieId())
+                .orElseThrow(() -> new BadRequestException("There is no movie with given ID")
                 );
 
         if (!isDateAcceptable(sessionData.getHallId(), sessionData.getDate(), movieDb.getDuration()))
@@ -97,22 +102,22 @@ public class SessionService implements ISessionService {
     @Override
     public SessionDto updateSession(Long id, SessionData sessionData) {
         Session session = sessionRepository.findById(id)
-                    .orElseThrow(() -> new ItemNotFoundException("There is not session with given ID")
+                .orElseThrow(() -> new ItemNotFoundException("There is not session with given ID")
                 );
 
         session.setHall(
                 hallRepository.findById(
-                    sessionData.getHallId())
+                        sessionData.getHallId())
                         .orElseThrow(() -> new BadRequestException("There is no hall with given ID"))
         );
 
         session.setMovie(
                 movieRepository.findById(
-                    sessionData.getMovieId())
+                        sessionData.getMovieId())
                         .orElseThrow(() -> new BadRequestException("There is no movie with given ID"))
         );
 
-        if (!isDateAcceptable(sessionData.getHallId(), sessionData.getDate(), session.getMovie().getDuration()))
+        if (!isDateAcceptable(sessionData.getHallId(), sessionData.getDate(), session.getMovie().getDuration(), session.getId()))
             throw new BadRequestException("Invalid date");
         else
             session.setDate(sessionData.getDate());
@@ -131,10 +136,33 @@ public class SessionService implements ISessionService {
                     .plusSeconds(session.getMovie()
                             .getDuration())
                     .isAfter(date)
-                && session.getDate()
+                    && session.getDate()
                     .isBefore(date))
-            || (date.isBefore(session.getDate())
-                && date.plusSeconds(movieDuration)
+                    || (date.isBefore(session.getDate())
+                    && date.plusSeconds(movieDuration)
+                    .isAfter(session.getDate())))
+                return false;
+        }
+        return true;
+    }
+
+    private Boolean isDateAcceptable(Long hallId, LocalDateTime date, Integer movieDuration, Long sessionId){
+        if (date.isBefore(LocalDateTime.now()))
+            return false;
+
+        List<Session> sessions = sessionRepository.getActualSessionsByHallId(hallId);
+
+        sessions.removeIf(el -> el.getId().equals(sessionId));
+
+        for (Session session : sessions){
+            if ((session.getDate()
+                    .plusSeconds(session.getMovie()
+                            .getDuration())
+                    .isAfter(date)
+                    && session.getDate()
+                    .isBefore(date))
+                    || (date.isBefore(session.getDate())
+                    && date.plusSeconds(movieDuration)
                     .isAfter(session.getDate())))
                 return false;
         }
