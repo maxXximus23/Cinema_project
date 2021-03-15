@@ -113,7 +113,7 @@ public class SessionService implements ISessionService {
                         .orElseThrow(() -> new BadRequestException("There is no movie with given ID"))
         );
 
-        if (!isDateAcceptable(sessionData.getHallId(), sessionData.getDate(), session.getMovie().getDuration()))
+        if (!isDateAcceptable(sessionData.getHallId(), sessionData.getDate(), session.getMovie().getDuration(), session.getId()))
             throw new BadRequestException("Invalid date");
         else
             session.setDate(sessionData.getDate());
@@ -136,6 +136,29 @@ public class SessionService implements ISessionService {
                     .isBefore(date))
             || (date.isBefore(session.getDate())
                 && date.plusSeconds(movieDuration)
+                    .isAfter(session.getDate())))
+                return false;
+        }
+        return true;
+    }
+
+    private Boolean isDateAcceptable(Long hallId, LocalDateTime date, Integer movieDuration, Long sessionId){
+        if (date.isBefore(LocalDateTime.now()))
+            return false;
+
+        List<Session> sessions = sessionRepository.getActualSessionsByHallId(hallId);
+
+        sessions.removeIf(el -> el.getId().equals(sessionId));
+
+        for (Session session : sessions){
+            if ((session.getDate()
+                    .plusSeconds(session.getMovie()
+                            .getDuration())
+                    .isAfter(date)
+                    && session.getDate()
+                    .isBefore(date))
+                    || (date.isBefore(session.getDate())
+                    && date.plusSeconds(movieDuration)
                     .isAfter(session.getDate())))
                 return false;
         }
