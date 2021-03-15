@@ -1,5 +1,6 @@
 package com.dut.CinemaProject.api.controllers;
 
+import com.dut.CinemaProject.dto.Session.SessionData;
 import com.dut.CinemaProject.dto.Session.SessionDto;
 import com.dut.CinemaProject.dto.Session.SessionTicketsList;
 import com.dut.CinemaProject.services.interfaces.ISessionService;
@@ -27,4 +28,27 @@ public class SessionController {
         return sessionService.getSessionTicketsData(id);
     }
 
+    @GetMapping("{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public SessionDto getSession(@PathVariable Long id){
+        return sessionService.getSession(id);
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public SessionDto addSession(@RequestBody SessionData sessionData){
+        return sessionService.createSession(sessionData);
+    }
+
+    @PutMapping("{id}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public SessionDto updateSession(@PathVariable Long id, @RequestBody SessionData sessionData){
+        return sessionService.updateSession(id, sessionData);
+    }
+
+    @DeleteMapping("{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteSession(@PathVariable Long id){
+        sessionService.removeSession(id);
+    }
 }

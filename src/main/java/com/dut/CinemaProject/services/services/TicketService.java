@@ -28,7 +28,7 @@ public class TicketService implements ITicketService {
 
     @Override
     public List<TicketDto> getUsersTickets(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(ItemNotFoundException::new);
+        User user = userRepository.findById(userId).orElseThrow(() -> new ItemNotFoundException("User not found"));
         return ticketRepository.findTicketsByCustomer(user).stream().map(TicketDto::new).collect(Collectors.toList());
     }
 
@@ -47,7 +47,7 @@ public class TicketService implements ITicketService {
     }
 
     @Override
-    public Long purchaseTicket(PurchaseTicket purchaseTicket) {
+    public TicketDto purchaseTicket(PurchaseTicket purchaseTicket) {
         Session session = sessionRepository.findById(purchaseTicket.getSessionId())
                 .orElseThrow(ItemNotFoundException::new);
 
@@ -56,6 +56,9 @@ public class TicketService implements ITicketService {
 
         if(session.getHall().getPlaces() < purchaseTicket.getPlace())
             throw new ValidationException("Place out of bounce");
+
+        if(ticketRepository.countTicketsByUserId(purchaseTicket.getUserId()) >= 10)
+            throw new ValidationException("User can't buy tickets more than 10!");
 
         User user = userRepository.findById(purchaseTicket.getUserId())
                 .orElseThrow(ItemNotFoundException::new);
@@ -72,6 +75,6 @@ public class TicketService implements ITicketService {
         ticket.setRow(purchaseTicket.getRow());
         ticket.setPlace(purchaseTicket.getPlace());
 
-        return ticketRepository.save(ticket).getId();
+        return new TicketDto(ticketRepository.save(ticket));
     }
 }

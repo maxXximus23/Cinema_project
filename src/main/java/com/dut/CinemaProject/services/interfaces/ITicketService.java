@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface ITicketService {
     List<TicketDto> getUsersTickets(Long userId);
-    Long purchaseTicket(PurchaseTicket purchaseTicket);
+    TicketDto purchaseTicket(PurchaseTicket purchaseTicket);
     TicketDto getTicketById(Long id);
     void deleteTicket(Long id);
 }
