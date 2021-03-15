@@ -12,6 +12,6 @@ public interface SessionRepository extends JpaRepository<Session, Long> {
     @Query("SELECT s FROM Session s WHERE s.date > NOW()")
     List<Session> getActualSessions();
     List<Session> findSessionsByHall(Hall hall);
-    @Query(value="SELECT s FROM Session s WHERE s.date > NOW() AND s.hall_id = :hallId", nativeQuery = true)
+    @Query(value="SELECT * FROM Sessions  WHERE date > NOW() AND hall_id = :hallId", nativeQuery = true)
     List<Session> getActualSessionsByHallId(@Param("hallId") Long hallId);
 }

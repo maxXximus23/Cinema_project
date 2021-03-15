@@ -65,6 +65,11 @@ public class SessionService implements ISessionService {
 
     @Override
     public Long createSession(NewSession sessionData) {
+        if (sessionData.getMovieId() == null)
+            throw new BadRequestException("Movie ID is not provided. Check your request and try again");
+        if (sessionData.getHallId() == null)
+            throw new BadRequestException("Hall ID is not provided. Check your request and try again");
+
         Hall hallDb = hallRepository.findById(
                     sessionData.getHallId())
                         .orElseThrow(() -> new BadRequestException("There is no hall with given ID")
