@@ -28,7 +28,7 @@ public class HallController {
 
     @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
-    public Long addHall(@RequestBody NewHall newHall){
+    public HallDto addHall(@RequestBody NewHall newHall){
         return hallService.createHall(newHall);
     }
 

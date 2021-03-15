@@ -18,7 +18,7 @@ public class HallService implements IHallService {
     private final HallRepository hallRepository;
 
     @Override
-    public Long createHall(NewHall newHall) {
+    public HallDto createHall(NewHall newHall) {
         if(newHall.getName().isBlank() || newHall.getPlaces() < 1 || newHall.getRowsAmount() < 1)
             throw new BadRequestException("Invalid info about the Hall");
         else if (hallRepository.findByName(newHall.getName()).size() > 0)
@@ -29,7 +29,8 @@ public class HallService implements IHallService {
         hall.setRowsAmount(newHall.getRowsAmount());
         hall.setPlaces(newHall.getPlaces());
 
-        return hallRepository.save(hall).getId();
+        //return hallRepository.save(hall).getId();
+        return new HallDto(hallRepository.save(hall));
     }
 
     @Override
