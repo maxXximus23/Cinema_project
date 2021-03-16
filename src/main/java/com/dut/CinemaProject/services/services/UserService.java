@@ -8,24 +8,23 @@ import com.dut.CinemaProject.dao.repos.UserRepository;
 import com.dut.CinemaProject.dto.User.AuthenticationRequestDto;
 import com.dut.CinemaProject.dto.User.UserDto;
 import com.dut.CinemaProject.exceptions.EmailAlreadyExistsException;
+import com.dut.CinemaProject.exceptions.ItemNotFoundException;
 import com.dut.CinemaProject.exceptions.UserNotFoundException;
 import com.dut.CinemaProject.security.jwt.JwtTokenProvider;
 import com.dut.CinemaProject.services.interfaces.IUserService;
 import com.dut.CinemaProject.services.mapper.UserMapper;
-import lombok.extern.slf4j.Slf4j;
+import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.*;
 
 @Service
-@Slf4j
+@AllArgsConstructor
 public class UserService implements IUserService {
 
     private final UserRepository userRepository;
@@ -34,15 +33,6 @@ public class UserService implements IUserService {
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
 
-    public UserService(UserRepository userRepository,
-                       RoleRepository roleRepository,
-                       AuthenticationManager authenticationManager,
-                       JwtTokenProvider jwtTokenProvider) {
-        this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
-        this.authenticationManager = authenticationManager;
-        this.jwtTokenProvider = jwtTokenProvider;
-    }
 
     @Override
     public Map<Object, Object> login(AuthenticationRequestDto requestDto) {
@@ -97,7 +87,8 @@ public class UserService implements IUserService {
 
     @Override
     public User findByEmail(String email) {
-        return userRepository.findByEmail(email);
+        return Optional.ofNullable(userRepository.findByEmail(email))
+                .orElseThrow(() -> new ItemNotFoundException("User with email " + email + " no found"));
     }
 
     @Override
