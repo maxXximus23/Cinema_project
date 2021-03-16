@@ -6,14 +6,18 @@ import com.dut.CinemaProject.dao.domain.User;
 import com.dut.CinemaProject.dao.repos.SessionRepository;
 import com.dut.CinemaProject.dao.repos.TicketRepository;
 import com.dut.CinemaProject.dao.repos.UserRepository;
+import com.dut.CinemaProject.dto.Ticket.Place;
 import com.dut.CinemaProject.dto.Ticket.PurchaseTicket;
+import com.dut.CinemaProject.dto.Ticket.PurchaseTicketsList;
 import com.dut.CinemaProject.dto.Ticket.TicketDto;
+import com.dut.CinemaProject.exceptions.BadRequestException;
 import com.dut.CinemaProject.exceptions.ItemNotFoundException;
 import com.dut.CinemaProject.exceptions.ValidationException;
 import com.dut.CinemaProject.services.interfaces.ITicketService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -76,5 +80,52 @@ public class TicketService implements ITicketService {
         ticket.setPlace(purchaseTicket.getPlace());
 
         return new TicketDto(ticketRepository.save(ticket));
+    }
+
+    @Override
+    public List<TicketDto> purchaseTickets(PurchaseTicketsList ticketsData) {
+        if (ticketsData.getSessionId() == null || ticketsData.getUserId() == null)
+            throw new BadRequestException("ID values can not be null!");
+
+        Session session = sessionRepository.findById(ticketsData.getSessionId())
+                .orElseThrow(() -> new ItemNotFoundException("Session not found"));
+
+        User user = userRepository.findById(ticketsData.getUserId())
+                .orElseThrow(() -> new ItemNotFoundException("User not found"));
+
+        if (ticketsData.getPlaces() == null || ticketsData.getPlaces().size() == 0)
+            throw new BadRequestException("You trying to buy 0 tickets!");
+
+        if (ticketsData.getPlaces().size() + ticketRepository.countTicketsByUserId(user.getId()) > 10)
+            throw new ValidationException("User can't buy more than 10 tickets!");
+
+        List<Ticket> ticketsDb = new ArrayList<>();
+        for (Place place: ticketsData.getPlaces()
+             ) {
+            if(session.getHall().getRowsAmount() < place.getRow())
+                throw new ValidationException("Row out of bounce (" + place.getRow() + " of " + session.getHall().getRowsAmount() + ")");
+
+            if(session.getHall().getPlaces() < place.getPlace())
+                throw new ValidationException("Place out of bounce (" + place.getPlace() + " of " + session.getHall().getPlaces() + ")");
+
+            Optional<Ticket> existingTicket = ticketRepository.getTicketByDetails(place.getPlace(),
+                    place.getRow(), session.getId());
+
+            if(existingTicket.isPresent())
+                throw new ValidationException("Requested ticket is sold out");
+
+            Ticket ticket = new Ticket();
+            ticket.setCustomer(user);
+            ticket.setPlace(place.getPlace());
+            ticket.setRow(place.getRow());
+            ticket.setSession(session);
+
+            ticketsDb.add(ticket);
+        }
+
+        return ticketRepository.saveAll(ticketsDb)
+                .stream()
+                .map(TicketDto::new)
+                .collect(Collectors.toList());
     }
 }
