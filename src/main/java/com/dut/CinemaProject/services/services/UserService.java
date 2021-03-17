@@ -44,10 +44,6 @@ public class UserService implements IUserService {
 
             User user = findByEmail(email);
 
-            if(user == null){
-                throw new UsernameNotFoundException("User with username: " + email + "not found");
-            }
-
             String token = jwtTokenProvider.createToken(email, user.getRoles());
 
             Map<Object, Object> response = new HashMap<>();
@@ -91,7 +87,7 @@ public class UserService implements IUserService {
     @Override
     public User findByEmail(String email) {
         return Optional.ofNullable(userRepository.findByEmail(email))
-                .orElseThrow(() -> new ItemNotFoundException("User with email " + email + " no found"));
+                .orElseThrow(() -> new ItemNotFoundException("User with email " + email + " not found"));
     }
 
     @Override
