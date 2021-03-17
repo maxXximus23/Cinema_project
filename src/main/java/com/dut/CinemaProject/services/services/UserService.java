@@ -7,6 +7,7 @@ import com.dut.CinemaProject.dao.repos.RoleRepository;
 import com.dut.CinemaProject.dao.repos.UserRepository;
 import com.dut.CinemaProject.dto.User.AuthenticationRequestDto;
 import com.dut.CinemaProject.dto.User.UserDto;
+import com.dut.CinemaProject.dto.User.UserRegisterData;
 import com.dut.CinemaProject.exceptions.EmailAlreadyExistsException;
 import com.dut.CinemaProject.exceptions.ItemNotFoundException;
 import com.dut.CinemaProject.exceptions.UserNotFoundException;
@@ -60,10 +61,12 @@ public class UserService implements IUserService {
         }
     }
 
-    @Override
-    public User register(UserDto userDto) {
 
-        if(!isEmailFree(userDto))
+
+    @Override
+    public UserDto register(UserRegisterData userRegisterData) {
+
+        if(!isEmailFree(userRegisterData))
             throw new EmailAlreadyExistsException("This email is already registered");
 
 
@@ -71,13 +74,13 @@ public class UserService implements IUserService {
         List<Role> userRoles = new ArrayList<>();
         userRoles.add(roleUser);
 
-        User user = UserMapper.userFromDto(userDto);
+        User user = UserMapper.userFromRegisterData(userRegisterData);
 
         user.setRoles(userRoles);
         user.setStatus(Status.ACTIVE);
         user.setCreated(new Date());
 
-        return userRepository.save(user);
+        return new UserDto(userRepository.save(user));
     }
 
     @Override
@@ -102,8 +105,8 @@ public class UserService implements IUserService {
         userRepository.deleteById(id);
     }
 
-    private boolean isEmailFree(UserDto userDto){
-        Optional<User> user = Optional.ofNullable(userRepository.findByEmail(userDto.getEmail()));
+    private boolean isEmailFree(UserRegisterData userRegisterData){
+        Optional<User> user = Optional.ofNullable(userRepository.findByEmail(userRegisterData.getEmail()));
         return user.isEmpty();
     }
 }

@@ -3,6 +3,7 @@ package com.dut.CinemaProject.api.controllers;
 import com.dut.CinemaProject.dao.domain.User;
 import com.dut.CinemaProject.dto.User.AuthenticationRequestDto;
 import com.dut.CinemaProject.dto.User.UserDto;
+import com.dut.CinemaProject.dto.User.UserRegisterData;
 import com.dut.CinemaProject.services.services.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,8 +27,8 @@ public class AuthenticationController {
 
     @PostMapping("register")
     @ResponseStatus(HttpStatus.OK)
-    public User register(@RequestBody UserDto userDto){
-        return userService.register(userDto);
+    public UserDto register(@RequestBody UserRegisterData userRegisterData){
+        return userService.register(userRegisterData);
     }
 
 
