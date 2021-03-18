@@ -1,6 +1,7 @@
 package com.dut.CinemaProject.api.controllers;
 
 import com.dut.CinemaProject.dto.Ticket.PurchaseTicket;
+import com.dut.CinemaProject.dto.Ticket.PurchaseTicketsList;
 import com.dut.CinemaProject.dto.Ticket.TicketDto;
 import com.dut.CinemaProject.services.interfaces.ITicketService;
 import lombok.AllArgsConstructor;
@@ -31,5 +32,11 @@ public class TicketsController {
     @ResponseStatus(HttpStatus.CREATED)
     public TicketDto purchaseTicket(@RequestBody PurchaseTicket purchaseTicket){
         return ticketService.purchaseTicket(purchaseTicket);
+    }
+
+    @PostMapping("purchaselist")
+    @ResponseStatus(HttpStatus.CREATED)
+    public List<TicketDto> purchaseTickets(@RequestBody PurchaseTicketsList ticketsData){
+        return ticketService.purchaseTickets(ticketsData);
     }
 }
