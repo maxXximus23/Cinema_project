@@ -22,6 +22,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.*;
 
@@ -63,8 +64,7 @@ public class UserService implements IUserService {
     @Override
     public UserDto register(UserRegisterData userRegisterData) {
 
-        if(!isEmailFree(userRegisterData))
-            throw new EmailAlreadyExistsException("This email is already registered");
+        isEmailFree(userRegisterData.getEmail());
 
 
         Role roleUser = roleRepository.findByName("ROLE_USER");
@@ -102,9 +102,12 @@ public class UserService implements IUserService {
         userRepository.deleteById(id);
     }
 
-    private boolean isEmailFree(UserRegisterData userRegisterData){
-        Optional<User> user = Optional.ofNullable(userRepository.findByEmail(userRegisterData.getEmail()));
-        return user.isEmpty();
+    public boolean isEmailFree(String email){
+        Optional<User> user = Optional.ofNullable(userRepository.findByEmail(email));
+        if(user.isPresent())
+            throw new EmailAlreadyExistsException("This email is already registered");
+
+        return true;
     }
 }
 

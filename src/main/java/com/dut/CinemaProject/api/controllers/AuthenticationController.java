@@ -31,5 +31,11 @@ public class AuthenticationController {
         return userService.register(userRegisterData);
     }
 
+    @GetMapping("check-{email}")
+    @ResponseStatus(HttpStatus.OK)
+    public void isEmailFree(@PathVariable String email){
+        userService.isEmailFree(email);
+    }
+
 
 }
