@@ -98,6 +98,7 @@ public class MovieService implements IMovieService {
         return sessionRepository.getActualSessionsByMovieId(id)
                 .stream()
                 .map(SessionShort::new)
+                .sorted((e1, e2) -> e1.getDate().isBefore(e2.getDate()) ? -1 : 1)
                 .collect(Collectors.toList());
     }
 }
