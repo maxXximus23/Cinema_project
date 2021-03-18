@@ -21,7 +21,7 @@ public class AuthenticationController {
 
     @PostMapping("login")
     @ResponseStatus(HttpStatus.OK)
-    public Map<Object, Object> login(@RequestBody AuthenticationRequestDto requestDto){
+    public String login(@RequestBody AuthenticationRequestDto requestDto){
         return userService.login(requestDto);
     }
 

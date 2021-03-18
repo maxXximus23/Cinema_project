@@ -10,7 +10,7 @@ import java.util.Map;
 
 public interface IUserService {
 
-    Map<Object, Object> login(AuthenticationRequestDto requestDto);
+    String login(AuthenticationRequestDto requestDto);
 
     UserDto register(UserRegisterData userRegisterData);
 

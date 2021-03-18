@@ -10,6 +10,7 @@ import com.dut.CinemaProject.dto.User.UserDto;
 import com.dut.CinemaProject.dto.User.UserRegisterData;
 import com.dut.CinemaProject.exceptions.EmailAlreadyExistsException;
 import com.dut.CinemaProject.exceptions.ItemNotFoundException;
+import com.dut.CinemaProject.exceptions.JwtAuthenticationException;
 import com.dut.CinemaProject.exceptions.UserNotFoundException;
 import com.dut.CinemaProject.security.jwt.JwtTokenProvider;
 import com.dut.CinemaProject.services.interfaces.IUserService;
@@ -36,28 +37,28 @@ public class UserService implements IUserService {
 
 
     @Override
-    public Map<Object, Object> login(AuthenticationRequestDto requestDto) {
-        try{
+    public String login(AuthenticationRequestDto requestDto) {
+
             String email = requestDto.getEmail();
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(email, requestDto.getPassword()));
 
             User user = findByEmail(email);
 
-            String token = jwtTokenProvider.createToken(email, user.getRoles());
+            if(user.getStatus().name().equals("ACTIVE"))
+                throw new JwtAuthenticationException("User is already logged in");
 
-            Map<Object, Object> response = new HashMap<>();
-            response.put("username", email);
-            response.put("token", token);
+            if(user.getStatus().name().equals("BLOCKED"))
+                throw new JwtAuthenticationException("User is blocked");
 
-            return response;
+            user.setStatus(Status.ACTIVE);
+            userRepository.save(user);
 
-        } catch (AuthenticationException e) {
-            throw new BadCredentialsException("Invalid email or password");
-        }
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(email, requestDto.getPassword()));
+
+            return jwtTokenProvider.createToken(email, user.getRoles());
+
+
     }
-
-
 
     @Override
     public UserDto register(UserRegisterData userRegisterData) {
@@ -73,7 +74,7 @@ public class UserService implements IUserService {
         User user = UserMapper.userFromRegisterData(userRegisterData);
 
         user.setRoles(userRoles);
-        user.setStatus(Status.ACTIVE);
+        user.setStatus(Status.NOT_ACTIVE);
         user.setCreated(new Date());
 
         return new UserDto(userRepository.save(user));
