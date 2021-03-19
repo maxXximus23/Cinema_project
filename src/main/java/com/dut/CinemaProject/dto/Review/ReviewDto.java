@@ -12,11 +12,13 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class ReviewDto {
 
+
+    //TODO:rework author name
     public ReviewDto(Review review){
         this.id = review.getId();
         this.movieId = review.getMovie().getId();
         this.authorId = review.getAuthor().getId();
-        this.authorName = review.getAuthor().getName();
+//        this.authorName = review.getAuthor().getName();
         this.text = review.getText();
         this.creationDate = review.getCreationDate();
     }
