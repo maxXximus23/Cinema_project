@@ -20,25 +20,25 @@ public class HallController {
 
     private final IHallService hallService;
 
-    @GetMapping("/{id}")
+    @GetMapping("{id}")
     @ResponseStatus(HttpStatus.OK)
     public HallDto getById(@PathVariable Long id){
         return hallService.getHallById(id);
     }
 
-    @PostMapping("/add")
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public HallDto addHall(@RequestBody NewHall newHall){
         return hallService.createHall(newHall);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteHall(@PathVariable Long id){
         hallService.deleteHall(id);
     }
 
-    @PutMapping("/{id}/update")
+    @PutMapping("{id}")
     @ResponseStatus(HttpStatus.OK)
     public HallDto updateHall(@PathVariable Long id, @RequestBody UpdateHallData hall){
         return  hallService.updateHall(id, hall);
