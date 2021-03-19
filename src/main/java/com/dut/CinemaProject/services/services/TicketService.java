@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 public class TicketService implements ITicketService {
+
     private final TicketRepository ticketRepository;
     private final UserRepository userRepository;
     private final SessionRepository sessionRepository;

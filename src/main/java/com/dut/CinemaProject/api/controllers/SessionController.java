@@ -16,13 +16,13 @@ import java.util.List;
 public class SessionController {
     private ISessionService sessionService;
 
-    @GetMapping("/actual")
+    @GetMapping("actual")
     @ResponseStatus(HttpStatus.OK)
     public List<SessionDto> getActual(){
         return sessionService.getActualSessions();
     }
   
-    @GetMapping("/{id}/tickets")
+    @GetMapping("{id}/tickets")
     @ResponseStatus(HttpStatus.OK)
     public SessionTicketsList getTicketsList(@PathVariable Long id){
         return sessionService.getSessionTicketsData(id);

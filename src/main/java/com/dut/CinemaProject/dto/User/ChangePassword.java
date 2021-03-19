@@ -1,6 +1,5 @@
 package com.dut.CinemaProject.dto.User;
 
-import com.dut.CinemaProject.dao.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;

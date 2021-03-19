@@ -4,7 +4,6 @@ import com.dut.CinemaProject.dao.domain.User;
 import com.dut.CinemaProject.dao.repos.UserRepository;
 import com.dut.CinemaProject.security.jwt.JwtUserFactory;
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

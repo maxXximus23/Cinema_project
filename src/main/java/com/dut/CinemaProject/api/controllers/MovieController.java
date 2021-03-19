@@ -18,25 +18,25 @@ public class MovieController {
 
     private final IMovieService movieService;
 
-    @GetMapping("/{id}")
+    @GetMapping("{id}")
     @ResponseStatus(HttpStatus.OK)
     public MovieDto getById(@PathVariable Long id){
         return movieService.getMovieById(id);
     }
 
-    @PostMapping("/add")
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public MovieDto addMovie(@RequestBody NewMovie newMovie){
         return movieService.createMovie(newMovie);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteMovie(@PathVariable Long id){
         movieService.deleteMovie(id);
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("{id}")
     @ResponseStatus(HttpStatus.OK)
     public MovieDto updateMovie(@PathVariable Long id, @RequestBody UpdateMovieData movie){
         return  movieService.updateMovie(id, movie);

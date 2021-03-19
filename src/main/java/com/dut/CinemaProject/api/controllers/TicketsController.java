@@ -16,7 +16,7 @@ import java.util.List;
 public class TicketsController {
     private final ITicketService ticketService;
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void cancelBooking(@PathVariable Long id){
         ticketService.deleteTicket(id);

@@ -15,25 +15,25 @@ import java.util.List;
 public class ReviewController {
     private final IReviewService reviewService;
 
-    @GetMapping("/{id}")
+    @GetMapping("{id}")
     @ResponseStatus(HttpStatus.OK)
     public ReviewDto getById(@PathVariable Long id){
         return reviewService.getById(id);
     }
 
-    @GetMapping("/movie/{id}")
+    @GetMapping("movie/{id}")
     @ResponseStatus(HttpStatus.OK)
     public List<ReviewDto> getListOfMovieReviews(@PathVariable Long id){
         return reviewService.getReviewsByMovie(id);
     }
 
-    @PostMapping("/add")
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ReviewDto addReview(@RequestBody NewReview newReview){
         return reviewService.createReview(newReview);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteComment(@PathVariable Long id){
         reviewService.deleteReview(id);

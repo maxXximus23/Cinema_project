@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 public class SessionService implements ISessionService {
+
     private final SessionRepository sessionRepository;
     private final TicketRepository ticketRepository;
     private final HallRepository hallRepository;

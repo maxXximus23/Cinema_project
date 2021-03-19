@@ -21,7 +21,7 @@ public class UserController {
         return (accountService.getUserAccount(id));
     }
 
-    @PostMapping("{userId}/changePassword")
+    @PutMapping("{userId}/changePassword")
     @ResponseStatus(HttpStatus.OK)
     public String changePassword(@PathVariable Long userId, @RequestBody ChangePassword changePassword){
         return userService.changeUserPasswordById(userId, changePassword.getNewPassword(),
