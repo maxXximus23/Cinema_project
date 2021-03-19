@@ -13,10 +13,16 @@ import com.dut.CinemaProject.security.jwt.JwtTokenProvider;
 import com.dut.CinemaProject.services.interfaces.IUserService;
 import com.dut.CinemaProject.services.mapper.UserMapper;
 import lombok.AllArgsConstructor;
+import org.passay.*;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Properties;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -106,9 +112,29 @@ public class UserService implements IUserService {
 
     @Override
     public String changeUserPasswordById(Long userId, String newPassword, String oldPassword) {
+        PasswordValidator passwordValidator = new PasswordValidator(
+                new WhitespaceRule(),
+                new LengthRule(4, 32),
+                new AllowedRegexRule("^[A-Za-z0-9]+$")
+        );
+
         User user = userRepository.findById(userId).orElseThrow(ItemNotFoundException::new);
 
-        if(!oldPassword.equals(user.getPassword())){
+        PasswordData passwordData = new PasswordData(newPassword);
+
+        RuleResult ruleResult = passwordValidator.validate(passwordData);
+
+        Properties props = new Properties();
+        Path path = Paths.get("src/main/resources/messages.properties");
+
+        if(ruleResult.isValid()){
+            return "Password validated.";
+        } else {
+            return ruleResult.getDetails().toString();
+            /*return  "Invalid Password: " + passwordValidator.getMessages(ruleResult);*/
+        }
+
+        /*if(!oldPassword.equals(user.getPassword())){
             throw new ValidationException("Password doesn't match");
         }
 
@@ -128,7 +154,12 @@ public class UserService implements IUserService {
 
         userRepository.save(user);
 
+
+
         return "Password has been successfully changed!";
+
+         */
+
     }
 
     public boolean containsIllegals(String toExamine) {
