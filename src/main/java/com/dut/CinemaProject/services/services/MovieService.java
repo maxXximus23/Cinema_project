@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 public class MovieService implements IMovieService {
+
     private final MovieRepository movieRepository;
     private final SessionRepository sessionRepository;
 

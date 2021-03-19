@@ -10,7 +10,8 @@ import org.springframework.stereotype.Service;
 @Service
 @AllArgsConstructor
 public class AccountService implements IAccountService {
-    private UserRepository userRepository;
+
+    final private UserRepository userRepository;
 
     @Override
     public UserDto getUserAccount(Long id) {

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/users/")
+@RequestMapping("users")
 public class AuthenticationController {
 
     private final UserService userService;

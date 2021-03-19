@@ -18,7 +18,7 @@ public class ReviewDto {
         this.id = review.getId();
         this.movieId = review.getMovie().getId();
         this.authorId = review.getAuthor().getId();
-//        this.authorName = review.getAuthor().getName();
+        this.authorName = review.getAuthor().getFirstName()+" "+review.getAuthor().getLastName();
         this.text = review.getText();
         this.creationDate = review.getCreationDate();
     }

@@ -28,9 +28,9 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 public class UserService implements IUserService {
+
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
-
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
 
