@@ -5,7 +5,6 @@ import com.dut.CinemaProject.dto.User.UserDto;
 import com.dut.CinemaProject.exceptions.ItemNotFoundException;
 import com.dut.CinemaProject.services.interfaces.IAccountService;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service

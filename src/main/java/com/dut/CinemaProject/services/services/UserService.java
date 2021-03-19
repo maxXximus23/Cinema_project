@@ -8,26 +8,22 @@ import com.dut.CinemaProject.dao.repos.UserRepository;
 import com.dut.CinemaProject.dto.User.AuthenticationRequestDto;
 import com.dut.CinemaProject.dto.User.UserDto;
 import com.dut.CinemaProject.dto.User.UserRegisterData;
-import com.dut.CinemaProject.exceptions.EmailAlreadyExistsException;
-import com.dut.CinemaProject.exceptions.ItemNotFoundException;
-import com.dut.CinemaProject.exceptions.JwtAuthenticationException;
-import com.dut.CinemaProject.exceptions.UserNotFoundException;
-import com.dut.CinemaProject.exceptions.ValidationException;
+import com.dut.CinemaProject.exceptions.*;
 import com.dut.CinemaProject.security.jwt.JwtTokenProvider;
 import com.dut.CinemaProject.services.interfaces.IUserService;
 import com.dut.CinemaProject.services.mapper.UserMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -44,7 +40,7 @@ public class UserService implements IUserService {
 
         String email = requestDto.getEmail();
 
-        User user = findByEmail(email);
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException("User not found!"));
 
         if(user.getStatus().name().equals("ACTIVE"))
             throw new JwtAuthenticationException("User is already logged in");
@@ -53,14 +49,13 @@ public class UserService implements IUserService {
             throw new JwtAuthenticationException("User is blocked");
 
         user.setStatus(Status.ACTIVE);
-        userRepository.save(user);
 
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(email, requestDto.getPassword()));
 
+        userRepository.save(user);
+
         return jwtTokenProvider.createToken(email, user.getRoles());
-
-
     }
 
     @Override
@@ -83,20 +78,17 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public List<User> getAll() {
-        return userRepository.findAll();
+    public List<UserDto> getAll() {
+        return userRepository.findAll()
+                .stream()
+                .map(UserDto::new)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public User findByEmail(String email) {
-        return Optional.ofNullable(userRepository.findByEmail(email))
-                .orElseThrow(() -> new ItemNotFoundException("User with email " + email + " not found"));
-    }
-
-    @Override
-    public User findById(Long id) {
-        return userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException("No such user in database"));
+    public UserDto findById(Long id) {
+        return new UserDto(userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("No such user in database")));
     }
 
     @Override
@@ -105,7 +97,7 @@ public class UserService implements IUserService {
     }
 
     public boolean isEmailFree(String email){
-        Optional<User> user = Optional.ofNullable(userRepository.findByEmail(email));
+        Optional<User> user = userRepository.findByEmail(email);
         if(user.isPresent())
             throw new EmailAlreadyExistsException("This email is already registered");
 

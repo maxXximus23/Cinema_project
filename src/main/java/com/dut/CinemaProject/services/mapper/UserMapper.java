@@ -1,7 +1,6 @@
 package com.dut.CinemaProject.services.mapper;
 
 import com.dut.CinemaProject.dao.domain.User;
-import com.dut.CinemaProject.dto.User.UserDto;
 import com.dut.CinemaProject.dto.User.UserRegisterData;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;

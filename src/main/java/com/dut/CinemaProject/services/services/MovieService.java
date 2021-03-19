@@ -7,7 +7,6 @@ import com.dut.CinemaProject.dto.Movie.MovieDto;
 import com.dut.CinemaProject.dto.Movie.NewMovie;
 import com.dut.CinemaProject.dto.Movie.UpdateMovieData;
 import com.dut.CinemaProject.dto.Session.SessionShort;
-import com.dut.CinemaProject.dto.Ticket.TicketDto;
 import com.dut.CinemaProject.exceptions.BadRequestException;
 import com.dut.CinemaProject.exceptions.ItemNotFoundException;
 import com.dut.CinemaProject.services.interfaces.IMovieService;

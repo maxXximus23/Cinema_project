@@ -8,7 +8,6 @@ import com.dut.CinemaProject.dao.repos.ReviewRepository;
 import com.dut.CinemaProject.dao.repos.UserRepository;
 import com.dut.CinemaProject.dto.Review.NewReview;
 import com.dut.CinemaProject.dto.Review.ReviewDto;
-import com.dut.CinemaProject.dto.Ticket.TicketDto;
 import com.dut.CinemaProject.exceptions.BadRequestException;
 import com.dut.CinemaProject.exceptions.ItemNotFoundException;
 import com.dut.CinemaProject.services.interfaces.IReviewService;

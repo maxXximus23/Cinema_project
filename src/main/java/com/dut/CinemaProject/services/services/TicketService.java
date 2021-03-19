@@ -1,7 +1,7 @@
 package com.dut.CinemaProject.services.services;
 
-import com.dut.CinemaProject.dao.domain.Ticket;
 import com.dut.CinemaProject.dao.domain.Session;
+import com.dut.CinemaProject.dao.domain.Ticket;
 import com.dut.CinemaProject.dao.domain.User;
 import com.dut.CinemaProject.dao.repos.SessionRepository;
 import com.dut.CinemaProject.dao.repos.TicketRepository;
