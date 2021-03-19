@@ -10,10 +10,12 @@ public class UserDto {
     public UserDto(User user){
         this.id = user.getId();
         this.email = user.getEmail();
-        this.userName = user.getFirstName() + " " + user.getLastName();
+        this.firstName = user.getFirstName();
+        this.lastName = user.getLastName();
     }
 
     private Long id;
     private String email;
-    private String userName;
+    private String firstName;
+    private String lastName;
 }
