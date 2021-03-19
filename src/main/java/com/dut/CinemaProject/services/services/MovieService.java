@@ -105,7 +105,7 @@ public class MovieService implements IMovieService {
     }
 
     @Override
-    public List<MovieDto> getMovies(Integer page, Integer perPage) {
+    public List<MovieDto> getMovies(Integer page, Integer perPage, String genre) {
         if (page < 1)
             throw new BadRequestException("Page can not be less than 1!");
 
@@ -113,6 +113,16 @@ public class MovieService implements IMovieService {
             throw new BadRequestException("On page must be at list one element!");
 
         List<Movie> movies =  movieRepository.findAll();
+
+        if (!genre.equals(""))
+            movies = movies.stream()
+                            .filter(el -> el.getGenres()
+                                            .toLowerCase()
+                                            .contains(genre.toLowerCase()))
+                            .collect(Collectors.toList());
+
+        if (movies.size() == 0)
+            throw new BadRequestException("Given genre does not exist!");
 
         if (movies.size() < (page - 1) * perPage)
             throw new BadRequestException("Requested page does not exist!");
@@ -131,11 +141,22 @@ public class MovieService implements IMovieService {
     }
 
     @Override
-    public Integer getPagesAmount(Integer perPage) {
+    public Integer getPagesAmount(Integer perPage, String genre) {
         if (perPage < 1)
             throw new BadRequestException("On page must be at list one element!");
 
-        double pages =  (double)movieRepository.findAll().size()/((double) perPage);
+        List<Movie> movies = movieRepository.findAll();
+        if (!genre.equals(""))
+            movies = movies.stream()
+                    .filter(el -> el.getGenres()
+                            .toLowerCase()
+                            .contains(genre.toLowerCase()))
+                    .collect(Collectors.toList());
+
+        if (movies.size() == 0)
+            throw new BadRequestException("Given genre does not exist!");
+
+        double pages =  (double)movies.size()/((double) perPage);
 
         if (pages == (int) pages)
             return (int) pages;

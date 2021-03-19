@@ -20,14 +20,16 @@ public class MovieController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<MovieDto> getMovies(@RequestParam(name = "page", defaultValue = "1") Integer page,
-                                     @RequestParam(name = "perPage", defaultValue = "20") Integer perPage){
-        return movieService.getMovies(page, perPage);
+                                    @RequestParam(name = "perPage", defaultValue = "20") Integer perPage,
+                                    @RequestParam(name = "genre", defaultValue = "") String genre){
+        return movieService.getMovies(page, perPage, genre);
     }
 
     @GetMapping("pages/{perPage}")
     @ResponseStatus(HttpStatus.OK)
-    public Integer pageAmount(@PathVariable Integer perPage){
-        return movieService.getPagesAmount(perPage);
+    public Integer pageAmount(@PathVariable Integer perPage,
+                              @RequestParam(name = "genre", defaultValue = "") String genre){
+        return movieService.getPagesAmount(perPage, genre);
     }
 
     @GetMapping("{id}")
