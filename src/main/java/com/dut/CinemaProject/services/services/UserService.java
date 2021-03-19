@@ -16,19 +16,13 @@ import lombok.AllArgsConstructor;
 import org.passay.*;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.FileInputStream;
-import java.io.InputStream;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Properties;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.io.IOException;
+import java.nio.file.FileSystemNotFoundException;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -112,60 +106,46 @@ public class UserService implements IUserService {
 
     @Override
     public String changeUserPasswordById(Long userId, String newPassword, String oldPassword) {
-        PasswordValidator passwordValidator = new PasswordValidator(
-                new WhitespaceRule(),
-                new LengthRule(4, 32),
-                new AllowedRegexRule("^[A-Za-z0-9]+$")
-        );
+        List<Rule> rules = new ArrayList<>();
+        rules.add(new WhitespaceRule());
+        rules.add(new LengthRule(4, 32));
+        rules.add(new AllowedRegexRule("^[A-Za-z0-9]+$"));
 
         User user = userRepository.findById(userId).orElseThrow(ItemNotFoundException::new);
-
-        PasswordData passwordData = new PasswordData(newPassword);
-
-        RuleResult ruleResult = passwordValidator.validate(passwordData);
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
         Properties props = new Properties();
-        Path path = Paths.get("src/main/resources/messages.properties");
 
-        if(ruleResult.isValid()){
-            return "Password validated.";
-        } else {
-            return ruleResult.getDetails().toString();
-            /*return  "Invalid Password: " + passwordValidator.getMessages(ruleResult);*/
+        try {
+            props.load(new FileInputStream("src/main/resources/messages.properties"));
+        } catch (IOException e) {
+            throw new FileSystemNotFoundException("System cannot find validator configuration (messages.properties). " +
+                    "Try to change path.");
         }
 
-        /*if(!oldPassword.equals(user.getPassword())){
-            throw new ValidationException("Password doesn't match");
+        MessageResolver resolver = new PropertiesMessageResolver(props);
+
+        PasswordValidator passwordValidator = new PasswordValidator(resolver, rules);
+        PasswordData passwordData = new PasswordData(newPassword);
+        RuleResult ruleResult = passwordValidator.validate(passwordData);
+
+        if(!passwordEncoder.matches(oldPassword ,user.getPassword())) {
+            throw new ValidationException("Password doesn't exist!");
         }
 
-        if(newPassword.length() > 32 || newPassword.length() < 4){
-            throw new ValidationException("Password length must not be more than 32 or less 4");
+        if(newPassword.equals(oldPassword)) {
+            throw new ValidationException("Password must not be the same as old!");
         }
 
-        if(newPassword.contains(" ") || containsIllegals(newPassword)){
-            throw new ValidationException("Password must not have spaces and invalid characters");
+        if(ruleResult.isValid()) {
+            user.setPassword(passwordEncoder.encode(newPassword));
+            userRepository.save(user);
+
+            return "Password has been successfully changed!";
         }
-
-        if(newPassword.equals(oldPassword)){
-            throw new ValidationException("New password is the same!");
+        else {
+            throw new ValidationException(passwordValidator.getMessages(ruleResult).toString());
         }
-
-        user.setPassword(newPassword);
-
-        userRepository.save(user);
-
-
-
-        return "Password has been successfully changed!";
-
-         */
-
-    }
-
-    public boolean containsIllegals(String toExamine) {
-        Pattern pattern = Pattern.compile("[~#@*+%{}<>\\[\\]|\"\\_^,.'?/=-]");
-        Matcher matcher = pattern.matcher(toExamine);
-        return matcher.find();
     }
 }
 
