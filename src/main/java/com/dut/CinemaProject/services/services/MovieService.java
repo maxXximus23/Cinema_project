@@ -3,9 +3,8 @@ package com.dut.CinemaProject.services.services;
 import com.dut.CinemaProject.dao.domain.Movie;
 import com.dut.CinemaProject.dao.repos.MovieRepository;
 import com.dut.CinemaProject.dao.repos.SessionRepository;
+import com.dut.CinemaProject.dto.Movie.MovieData;
 import com.dut.CinemaProject.dto.Movie.MovieDto;
-import com.dut.CinemaProject.dto.Movie.NewMovie;
-import com.dut.CinemaProject.dto.Movie.UpdateMovieData;
 import com.dut.CinemaProject.dto.Session.SessionShort;
 import com.dut.CinemaProject.exceptions.BadRequestException;
 import com.dut.CinemaProject.exceptions.ItemNotFoundException;
@@ -24,7 +23,7 @@ public class MovieService implements IMovieService {
     private final SessionRepository sessionRepository;
 
     @Override
-    public MovieDto createMovie(NewMovie newMovie) {
+    public MovieDto createMovie(MovieData newMovie) {
         if(newMovie.getTitle().isBlank() || newMovie.getDescription().isBlank() ||newMovie.getPosterPath().isBlank() ||newMovie.getTrailerPath().isBlank())
             throw new BadRequestException("Information can`t be empty");
         if(newMovie.getDuration()<=0)
@@ -36,6 +35,9 @@ public class MovieService implements IMovieService {
         movie.setTrailerPath(newMovie.getTrailerPath());
         movie.setPosterPath(newMovie.getPosterPath());
         movie.setDuration(newMovie.getDuration());
+        movie.setActors(newMovie.getActors());
+        movie.setCountry(newMovie.getCountry());
+        movie.setGenres(newMovie.getGenres());
 
         return new MovieDto(movieRepository.save(movie));
     }
@@ -47,7 +49,7 @@ public class MovieService implements IMovieService {
     }
 
     @Override
-    public MovieDto updateMovie(Long id, UpdateMovieData movie) {
+    public MovieDto updateMovie(Long id, MovieData movie) {
         Movie updateMovie = movieRepository.findById(id).orElseThrow(() -> new ItemNotFoundException("Movie not found"));
 
         if(movie.getTitle()!=null) {
@@ -100,5 +102,44 @@ public class MovieService implements IMovieService {
                 .map(SessionShort::new)
                 .sorted((e1, e2) -> e1.getDate().isBefore(e2.getDate()) ? -1 : 1)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<MovieDto> getMovies(Integer page, Integer perPage) {
+        if (page < 1)
+            throw new BadRequestException("Page can not be less than 1!");
+
+        if (perPage < 1)
+            throw new BadRequestException("On page must be at list one element!");
+
+        List<Movie> movies =  movieRepository.findAll();
+
+        if (movies.size() < (page - 1) * perPage)
+            throw new BadRequestException("Requested page does not exist!");
+
+        if (movies.size() >= page * perPage)
+            return movies.subList((page - 1) * perPage, perPage * page)
+                        .stream()
+                        .map(MovieDto::new)
+                        .collect(Collectors.toList());
+        else
+            return movies.subList((page - 1) * perPage, movies.size())
+                    .stream()
+                    .map(MovieDto::new)
+                    .collect(Collectors.toList());
+
+    }
+
+    @Override
+    public Integer getPagesAmount(Integer perPage) {
+        if (perPage < 1)
+            throw new BadRequestException("On page must be at list one element!");
+
+        double pages =  (double)movieRepository.findAll().size()/((double) perPage);
+
+        if (pages == (int) pages)
+            return (int) pages;
+        else
+            return  (int) (pages + 1);
     }
 }
