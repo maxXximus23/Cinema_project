@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("movies")
 @AllArgsConstructor
@@ -21,15 +22,17 @@ public class MovieController {
     @ResponseStatus(HttpStatus.OK)
     public List<MovieDto> getMovies(@RequestParam(name = "page", defaultValue = "1") Integer page,
                                     @RequestParam(name = "perPage", defaultValue = "20") Integer perPage,
-                                    @RequestParam(name = "genre", defaultValue = "") String genre){
-        return movieService.getMovies(page, perPage, genre);
+                                    @RequestParam(name = "genre", defaultValue = "") String genre,
+                                    @RequestParam(name = "title", defaultValue = "") String title){
+        return movieService.getMovies(page, perPage, genre, title);
     }
 
     @GetMapping("pages/{perPage}")
     @ResponseStatus(HttpStatus.OK)
     public Integer pageAmount(@PathVariable Integer perPage,
-                              @RequestParam(name = "genre", defaultValue = "") String genre){
-        return movieService.getPagesAmount(perPage, genre);
+                              @RequestParam(name = "genre", defaultValue = "") String genre,
+                              @RequestParam(name = "title", defaultValue = "") String title){
+        return movieService.getPagesAmount(perPage, genre, title);
     }
 
     @GetMapping("{id}")

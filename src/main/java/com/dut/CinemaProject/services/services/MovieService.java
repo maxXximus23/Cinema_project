@@ -83,6 +83,10 @@ public class MovieService implements IMovieService {
                 updateMovie.setDuration(movie.getDuration());
         }
 
+        updateMovie.setGenres(movie.getGenres());
+        updateMovie.setCountry(movie.getCountry());
+        updateMovie.setActors(movie.getActors());
+
         return new MovieDto(movieRepository.save(updateMovie));
     }
 
@@ -105,7 +109,7 @@ public class MovieService implements IMovieService {
     }
 
     @Override
-    public List<MovieDto> getMovies(Integer page, Integer perPage, String genre) {
+    public List<MovieDto> getMovies(Integer page, Integer perPage, String genre, String title) {
         if (page < 1)
             throw new BadRequestException("Page can not be less than 1!");
 
@@ -114,15 +118,19 @@ public class MovieService implements IMovieService {
 
         List<Movie> movies =  movieRepository.findAll();
 
-        if (!genre.equals(""))
+        if (!genre.equals("") && movies.size() != 0)
             movies = movies.stream()
-                            .filter(el -> el.getGenres()
-                                            .toLowerCase()
-                                            .contains(genre.toLowerCase()))
-                            .collect(Collectors.toList());
+                    .filter(el -> el.getGenres()
+                            .toLowerCase()
+                            .contains(genre.toLowerCase()))
+                    .collect(Collectors.toList());
 
-        if (movies.size() == 0)
-            throw new BadRequestException("Given genre does not exist!");
+        if (!title.equals("") && movies.size() != 0)
+            movies = movies.stream()
+                    .filter(el -> el.getTitle()
+                            .toLowerCase()
+                            .contains(title.toLowerCase()))
+                    .collect(Collectors.toList());
 
         if (movies.size() < (page - 1) * perPage)
             throw new BadRequestException("Requested page does not exist!");
@@ -141,20 +149,25 @@ public class MovieService implements IMovieService {
     }
 
     @Override
-    public Integer getPagesAmount(Integer perPage, String genre) {
+    public Integer getPagesAmount(Integer perPage, String genre, String title) {
         if (perPage < 1)
             throw new BadRequestException("On page must be at list one element!");
 
         List<Movie> movies = movieRepository.findAll();
-        if (!genre.equals(""))
+
+        if (!genre.equals("") && movies.size() != 0)
             movies = movies.stream()
                     .filter(el -> el.getGenres()
                             .toLowerCase()
                             .contains(genre.toLowerCase()))
                     .collect(Collectors.toList());
 
-        if (movies.size() == 0)
-            throw new BadRequestException("Given genre does not exist!");
+        if (!title.equals("") && movies.size() != 0)
+            movies = movies.stream()
+                    .filter(el -> el.getTitle()
+                            .toLowerCase()
+                            .contains(title.toLowerCase()))
+                    .collect(Collectors.toList());
 
         double pages =  (double)movies.size()/((double) perPage);
 

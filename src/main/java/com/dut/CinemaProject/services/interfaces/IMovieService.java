@@ -12,6 +12,6 @@ public interface IMovieService {
     MovieDto updateMovie(Long id, MovieData movie);
     MovieDto getMovieById(Long id);
     List<SessionShort> getSessions(Long id);
-    List<MovieDto> getMovies(Integer page, Integer perPage, String genre);
-    Integer getPagesAmount(Integer perPage, String genre);
+    List<MovieDto> getMovies(Integer page, Integer perPage, String genre, String title);
+    Integer getPagesAmount(Integer perPage, String genre, String title);
 }
