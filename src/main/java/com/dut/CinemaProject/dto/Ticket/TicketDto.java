@@ -20,6 +20,7 @@ public class TicketDto {
         this.hallName = ticket.getSession().getHall().getName();
         this.row = ticket.getRow();
         this.place = ticket.getPlace();
+        this.posterPath = ticket.getSession().getMovie().getPosterPath();
     }
 
     private Long id;
@@ -30,4 +31,5 @@ public class TicketDto {
     private String hallName;
     private Integer row;
     private Integer place;
+    private String posterPath;
 }
