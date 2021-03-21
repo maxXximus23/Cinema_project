@@ -64,7 +64,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public JwtBlacklist logout(Map<String, String> json) {
+    public void logout(Map<String, String> json) {
         String token = json.get("token");
         JwtBlacklist jwtBlacklist = new JwtBlacklist();
         jwtBlacklist.setToken(token);
@@ -75,7 +75,7 @@ public class UserService implements IUserService {
         user.setStatus(Status.NOT_ACTIVE);
         userRepository.save(user);
 
-        return jwtBlacklistService.saveTokenToBlacklist(jwtBlacklist);
+        jwtBlacklistService.saveTokenToBlacklist(jwtBlacklist);
     }
 
     private void checkUserStatus(User user) {

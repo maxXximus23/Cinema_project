@@ -13,7 +13,7 @@ public interface IUserService {
 
     Map<String, String> login(AuthenticationRequestDto requestDto);
 
-    JwtBlacklist logout(Map<String, String> token);
+    void logout(Map<String, String> token);
 
     UserDto register(UserRegisterData userRegisterData);
 

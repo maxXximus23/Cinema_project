@@ -28,9 +28,9 @@ public class AuthenticationController {
     }
 
     @PostMapping("logout")
-    @ResponseStatus(HttpStatus.OK)
-    public JwtBlacklist logout(@RequestBody Map<String, String> json){
-        return userService.logout(json);
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void logout(@RequestBody Map<String, String> json){
+        userService.logout(json);
     }
 
     @PostMapping("register")
