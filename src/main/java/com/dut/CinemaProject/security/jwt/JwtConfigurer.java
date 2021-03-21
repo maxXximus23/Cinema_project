@@ -1,5 +1,7 @@
 package com.dut.CinemaProject.security.jwt;
 
+import com.dut.CinemaProject.dao.repos.JwtBlacklistRepository;
+import com.dut.CinemaProject.exceptions.JwtAuthenticationException;
 import lombok.AllArgsConstructor;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -12,7 +14,7 @@ public class JwtConfigurer extends SecurityConfigurerAdapter<DefaultSecurityFilt
     private final JwtTokenProvider jwtTokenProvider;
 
     @Override
-    public void configure(HttpSecurity httpSecurity) throws  Exception {
+    public void configure(HttpSecurity httpSecurity) throws JwtAuthenticationException {
         JwtTokenFilter jwtTokenFilter = new JwtTokenFilter(jwtTokenProvider);
         httpSecurity.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
     }

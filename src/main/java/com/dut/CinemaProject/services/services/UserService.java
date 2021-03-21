@@ -1,5 +1,6 @@
 package com.dut.CinemaProject.services.services;
 
+import com.dut.CinemaProject.dao.domain.JwtBlacklist;
 import com.dut.CinemaProject.dao.domain.Role;
 import com.dut.CinemaProject.dao.domain.Status;
 import com.dut.CinemaProject.dao.domain.User;
@@ -18,7 +19,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.FileSystemNotFoundException;
@@ -33,29 +33,53 @@ public class UserService implements IUserService {
     private final RoleRepository roleRepository;
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
+    private final JwtBlacklistService jwtBlacklistService;
 
 
     @Override
-    public String login(AuthenticationRequestDto requestDto) {
+    public Map<String, String> login(AuthenticationRequestDto requestDto) {
 
         String email = requestDto.getEmail();
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException("User not found"));
 
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException("User not found!"));
+        checkUserStatus(user);
 
+        user.setStatus(Status.ACTIVE);
+        userRepository.save(user);
+
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(email, requestDto.getPassword()));
+
+        Map<String, String> response = new HashMap<>();
+        response.put("id", user.getId().toString());
+        response.put("token", jwtTokenProvider.createToken(email, user.getRoles()));
+
+        return response;
+
+
+    }
+
+    @Override
+    public void logout(Map<String, String> json) {
+        String token = json.get("token");
+        JwtBlacklist jwtBlacklist = new JwtBlacklist();
+        jwtBlacklist.setToken(token);
+
+        User user = userRepository.findById(Long.parseLong(json.get("id")))
+                .orElseThrow(() -> new UserNotFoundException("No such user in database"));
+
+        user.setStatus(Status.NOT_ACTIVE);
+        userRepository.save(user);
+
+        jwtBlacklistService.saveTokenToBlacklist(jwtBlacklist);
+    }
+
+    private void checkUserStatus(User user) {
         if(user.getStatus().name().equals("ACTIVE"))
             throw new JwtAuthenticationException("User is already logged in");
 
         if(user.getStatus().name().equals("BLOCKED"))
             throw new JwtAuthenticationException("User is blocked");
-
-        user.setStatus(Status.ACTIVE);
-
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(email, requestDto.getPassword()));
-
-        userRepository.save(user);
-
-        return jwtTokenProvider.createToken(email, user.getRoles());
     }
 
     @Override

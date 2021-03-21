@@ -5,10 +5,13 @@ import com.dut.CinemaProject.dto.User.UserDto;
 import com.dut.CinemaProject.dto.User.UserRegisterData;
 
 import java.util.List;
+import java.util.Map;
 
 public interface IUserService {
 
-    String login(AuthenticationRequestDto requestDto);
+    Map<String, String> login(AuthenticationRequestDto requestDto);
+
+    void logout(Map<String, String> token);
 
     UserDto register(UserRegisterData userRegisterData);
 
