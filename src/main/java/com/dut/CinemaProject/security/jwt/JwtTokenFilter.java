@@ -1,13 +1,13 @@
 package com.dut.CinemaProject.security.jwt;
 
 import com.dut.CinemaProject.dao.domain.JwtBlacklist;
-import com.dut.CinemaProject.dao.repos.JwtBlacklistRepository;
-import com.dut.CinemaProject.exceptions.EmailAlreadyExistsException;
 import com.dut.CinemaProject.exceptions.JwtAuthenticationException;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.filter.GenericFilterBean;
 
 import javax.servlet.FilterChain;
@@ -17,12 +17,14 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
+@Component
 @AllArgsConstructor
 public class JwtTokenFilter extends GenericFilterBean {
 
     private final JwtTokenProvider jwtTokenProvider;
 
     @Override
+    @ResponseStatus(HttpStatus.OK)
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain filterChain)
             throws IOException, ServletException, JwtAuthenticationException {
 
@@ -38,13 +40,8 @@ public class JwtTokenFilter extends GenericFilterBean {
                     SecurityContextHolder.getContext().setAuthentication(auth);
                 }
             }
-            filterChain.doFilter(req, res);
-        }else {
-            System.out.println("Token is in blacklist");
-            throw new JwtAuthenticationException("Invalid token");
         }
-
-
+        filterChain.doFilter(req, res);
 
     }
 }

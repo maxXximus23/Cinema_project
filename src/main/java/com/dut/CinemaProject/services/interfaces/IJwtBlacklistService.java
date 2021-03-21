@@ -6,4 +6,5 @@ import java.util.Map;
 
 public interface IJwtBlacklistService {
     JwtBlacklist findByTokenEquals(String token);
+    JwtBlacklist saveTokenToBlacklist(JwtBlacklist jwtBlacklist);
 }

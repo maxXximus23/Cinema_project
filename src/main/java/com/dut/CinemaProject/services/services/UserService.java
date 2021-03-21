@@ -37,7 +37,7 @@ public class UserService implements IUserService {
 
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
-    private final JwtBlacklistRepository jwtBlacklistRepository;
+    private final JwtBlacklistService jwtBlacklistService;
 
 
     @Override
@@ -75,7 +75,7 @@ public class UserService implements IUserService {
         user.setStatus(Status.NOT_ACTIVE);
         userRepository.save(user);
 
-        return jwtBlacklistRepository.save(jwtBlacklist);
+        return jwtBlacklistService.saveTokenToBlacklist(jwtBlacklist);
     }
 
     private void checkUserStatus(User user) {
@@ -90,7 +90,6 @@ public class UserService implements IUserService {
     public UserDto register(UserRegisterData userRegisterData) {
 
         isEmailFree(userRegisterData.getEmail());
-
 
         Role roleUser = roleRepository.findByName("ROLE_USER");
         List<Role> userRoles = new ArrayList<>();
