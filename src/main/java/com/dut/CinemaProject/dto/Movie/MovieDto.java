@@ -17,6 +17,9 @@ public class MovieDto {
         this.posterPath = movie.getPosterPath();
         this.trailerPath = movie.getTrailerPath();
         this.duration = movie.getDuration();
+        this.actors = movie.getActors();
+        this.genres = movie.getGenres();
+        this.country = movie.getCountry();
     }
 
     private Long id;
@@ -25,4 +28,7 @@ public class MovieDto {
     private String posterPath;
     private String trailerPath;
     private Integer duration;
+    private String actors;
+    private String genres;
+    private String country;
 }
