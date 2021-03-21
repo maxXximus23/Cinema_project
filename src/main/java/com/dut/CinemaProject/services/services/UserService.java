@@ -1,8 +1,10 @@
 package com.dut.CinemaProject.services.services;
 
+import com.dut.CinemaProject.dao.domain.JwtBlacklist;
 import com.dut.CinemaProject.dao.domain.Role;
 import com.dut.CinemaProject.dao.domain.Status;
 import com.dut.CinemaProject.dao.domain.User;
+import com.dut.CinemaProject.dao.repos.JwtBlacklistRepository;
 import com.dut.CinemaProject.dao.repos.RoleRepository;
 import com.dut.CinemaProject.dao.repos.UserRepository;
 import com.dut.CinemaProject.dto.User.AuthenticationRequestDto;
@@ -35,20 +37,16 @@ public class UserService implements IUserService {
 
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
+    private final JwtBlacklistRepository jwtBlacklistRepository;
 
 
     @Override
-    public String login(AuthenticationRequestDto requestDto) {
+    public Map<String, String> login(AuthenticationRequestDto requestDto) {
 
             String email = requestDto.getEmail();
-
             User user = findByEmail(email);
 
-            if(user.getStatus().name().equals("ACTIVE"))
-                throw new JwtAuthenticationException("User is already logged in");
-
-            if(user.getStatus().name().equals("BLOCKED"))
-                throw new JwtAuthenticationException("User is blocked");
+            checkUserStatus(user);
 
             user.setStatus(Status.ACTIVE);
             userRepository.save(user);
@@ -56,9 +54,36 @@ public class UserService implements IUserService {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(email, requestDto.getPassword()));
 
-            return jwtTokenProvider.createToken(email, user.getRoles());
+            Map<String, String> response = new HashMap<>();
+            response.put("id", user.getId().toString());
+            response.put("token", jwtTokenProvider.createToken(email, user.getRoles()));
+
+            return response;
 
 
+    }
+
+    @Override
+    public JwtBlacklist logout(Map<String, String> json) {
+        String token = json.get("token");
+        JwtBlacklist jwtBlacklist = new JwtBlacklist();
+        jwtBlacklist.setToken(token);
+
+        User user = userRepository.findById(Long.parseLong(json.get("id")))
+                .orElseThrow(() -> new UserNotFoundException("No such user in database"));
+
+        user.setStatus(Status.NOT_ACTIVE);
+        userRepository.save(user);
+
+        return jwtBlacklistRepository.save(jwtBlacklist);
+    }
+
+    private void checkUserStatus(User user) {
+        if(user.getStatus().name().equals("ACTIVE"))
+            throw new JwtAuthenticationException("User is already logged in");
+
+        if(user.getStatus().name().equals("BLOCKED"))
+            throw new JwtAuthenticationException("User is blocked");
     }
 
     @Override

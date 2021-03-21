@@ -1,9 +1,11 @@
 package com.dut.CinemaProject.api.controllers;
 
+import com.dut.CinemaProject.dao.domain.JwtBlacklist;
 import com.dut.CinemaProject.dao.domain.User;
 import com.dut.CinemaProject.dto.User.AuthenticationRequestDto;
 import com.dut.CinemaProject.dto.User.UserDto;
 import com.dut.CinemaProject.dto.User.UserRegisterData;
+import com.dut.CinemaProject.services.services.JwtBlacklistService;
 import com.dut.CinemaProject.services.services.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,8 +23,14 @@ public class AuthenticationController {
 
     @PostMapping("login")
     @ResponseStatus(HttpStatus.OK)
-    public String login(@RequestBody AuthenticationRequestDto requestDto){
+    public Map<String, String> login(@RequestBody AuthenticationRequestDto requestDto){
         return userService.login(requestDto);
+    }
+
+    @PostMapping("logout")
+    @ResponseStatus(HttpStatus.OK)
+    public JwtBlacklist logout(@RequestBody Map<String, String> json){
+        return userService.logout(json);
     }
 
     @PostMapping("register")

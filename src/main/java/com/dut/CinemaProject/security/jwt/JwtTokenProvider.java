@@ -1,7 +1,9 @@
 package com.dut.CinemaProject.security.jwt;
 
+import com.dut.CinemaProject.dao.domain.JwtBlacklist;
 import com.dut.CinemaProject.dao.domain.Role;
 import com.dut.CinemaProject.exceptions.JwtAuthenticationException;
+import com.dut.CinemaProject.services.services.JwtBlacklistService;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,6 +22,7 @@ import java.util.*;
 @Component
 public class JwtTokenProvider {
 
+
     @Value("${jwt.token.secret}")
     private String secret;
 
@@ -28,6 +31,8 @@ public class JwtTokenProvider {
 
     @Autowired
     private UserDetailsService userDetailsService;
+    @Autowired
+    private JwtBlacklistService jwtBlacklistService;
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -63,6 +68,10 @@ public class JwtTokenProvider {
 
     public String getUsername(String token) {
         return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().getSubject();
+    }
+
+    public JwtBlacklist findTokenInBlacklist(String token){
+        return jwtBlacklistService.findByTokenEquals(token);
     }
 
     public String resolveToken(HttpServletRequest req) {

@@ -1,5 +1,6 @@
 package com.dut.CinemaProject.services.interfaces;
 
+import com.dut.CinemaProject.dao.domain.JwtBlacklist;
 import com.dut.CinemaProject.dao.domain.User;
 import com.dut.CinemaProject.dto.User.AuthenticationRequestDto;
 import com.dut.CinemaProject.dto.User.UserDto;
@@ -10,7 +11,9 @@ import java.util.Map;
 
 public interface IUserService {
 
-    String login(AuthenticationRequestDto requestDto);
+    Map<String, String> login(AuthenticationRequestDto requestDto);
+
+    JwtBlacklist logout(Map<String, String> token);
 
     UserDto register(UserRegisterData userRegisterData);
 

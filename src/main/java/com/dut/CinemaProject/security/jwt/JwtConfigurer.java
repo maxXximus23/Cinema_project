@@ -1,5 +1,6 @@
 package com.dut.CinemaProject.security.jwt;
 
+import com.dut.CinemaProject.dao.repos.JwtBlacklistRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
