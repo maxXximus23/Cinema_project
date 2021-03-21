@@ -1,6 +1,5 @@
 package com.dut.CinemaProject.services.interfaces;
 
-import com.dut.CinemaProject.dao.domain.User;
 import com.dut.CinemaProject.dto.User.AuthenticationRequestDto;
 import com.dut.CinemaProject.dto.User.UserDto;
 import com.dut.CinemaProject.dto.User.UserRegisterData;
@@ -16,11 +15,9 @@ public interface IUserService {
 
     UserDto register(UserRegisterData userRegisterData);
 
-    User findByEmail(String email);
+    List<UserDto> getAll();
 
-    List<User> getAll();
-
-    User findById(Long id);
+    UserDto findById(Long id);
 
     void delete(Long id);
 

@@ -1,5 +1,6 @@
 package com.dut.CinemaProject.services.services;
 
+import com.dut.CinemaProject.dao.domain.JwtBlacklist;
 import com.dut.CinemaProject.dao.domain.Role;
 import com.dut.CinemaProject.dao.domain.Status;
 import com.dut.CinemaProject.dao.domain.User;
@@ -30,13 +31,14 @@ public class UserService implements IUserService {
     private final RoleRepository roleRepository;
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
+    private final JwtBlacklistService jwtBlacklistService;
 
 
     @Override
     public Map<String, String> login(AuthenticationRequestDto requestDto) {
 
         String email = requestDto.getEmail();
-        User user = findByEmail(email);
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException("User not found"));
 
         checkUserStatus(user);
 
