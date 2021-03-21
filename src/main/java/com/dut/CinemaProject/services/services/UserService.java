@@ -17,10 +17,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -36,26 +33,49 @@ public class UserService implements IUserService {
 
 
     @Override
-    public String login(AuthenticationRequestDto requestDto) {
+    public Map<String, String> login(AuthenticationRequestDto requestDto) {
 
         String email = requestDto.getEmail();
+        User user = findByEmail(email);
 
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException("User not found!"));
+        checkUserStatus(user);
 
+        user.setStatus(Status.ACTIVE);
+        userRepository.save(user);
+
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(email, requestDto.getPassword()));
+
+        Map<String, String> response = new HashMap<>();
+        response.put("id", user.getId().toString());
+        response.put("token", jwtTokenProvider.createToken(email, user.getRoles()));
+
+        return response;
+
+
+    }
+
+    @Override
+    public void logout(Map<String, String> json) {
+        String token = json.get("token");
+        JwtBlacklist jwtBlacklist = new JwtBlacklist();
+        jwtBlacklist.setToken(token);
+
+        User user = userRepository.findById(Long.parseLong(json.get("id")))
+                .orElseThrow(() -> new UserNotFoundException("No such user in database"));
+
+        user.setStatus(Status.NOT_ACTIVE);
+        userRepository.save(user);
+
+        jwtBlacklistService.saveTokenToBlacklist(jwtBlacklist);
+    }
+
+    private void checkUserStatus(User user) {
         if(user.getStatus().name().equals("ACTIVE"))
             throw new JwtAuthenticationException("User is already logged in");
 
         if(user.getStatus().name().equals("BLOCKED"))
             throw new JwtAuthenticationException("User is blocked");
-
-        user.setStatus(Status.ACTIVE);
-
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(email, requestDto.getPassword()));
-
-        userRepository.save(user);
-
-        return jwtTokenProvider.createToken(email, user.getRoles());
     }
 
     @Override

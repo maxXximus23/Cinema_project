@@ -8,6 +8,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @AllArgsConstructor
 @RestController
 @RequestMapping("users")
@@ -17,9 +19,16 @@ public class AuthenticationController {
 
     @PostMapping("login")
     @ResponseStatus(HttpStatus.OK)
-    public String login(@RequestBody AuthenticationRequestDto requestDto){
+    public Map<String, String> login(@RequestBody AuthenticationRequestDto requestDto){
         return userService.login(requestDto);
     }
+
+    @PostMapping("logout")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void logout(@RequestBody Map<String, String> json){
+        userService.logout(json);
+    }
+
 
     @PostMapping("register")
     @ResponseStatus(HttpStatus.OK)
