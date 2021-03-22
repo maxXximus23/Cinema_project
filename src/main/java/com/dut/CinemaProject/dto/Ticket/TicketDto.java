@@ -26,7 +26,6 @@ public class TicketDto {
     private Long id;
     private Long movieId;
     private String movieTitle;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm dd-MM-yyyy")
     private LocalDateTime date;
     private String hallName;
     private Integer row;
