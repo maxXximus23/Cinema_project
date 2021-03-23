@@ -28,6 +28,5 @@ public class SessionDto {
     private String movieTitle;
     private String moviePoster;
     private String hallName;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm dd-MM-yyyy")
     private LocalDateTime date;
 }
