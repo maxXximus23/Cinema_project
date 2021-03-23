@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 public class TicketDto {
     public TicketDto(Ticket ticket){
         this.id = ticket.getId();
+        this.sessionId = ticket.getSession().getId();
         this.movieId = ticket.getSession().getMovie().getId();
         this.movieTitle = ticket.getSession().getMovie().getTitle();
         this.date = ticket.getSession().getDate();
@@ -24,6 +25,7 @@ public class TicketDto {
     }
 
     private Long id;
+    private Long sessionId;
     private Long movieId;
     private String movieTitle;
     private LocalDateTime date;
