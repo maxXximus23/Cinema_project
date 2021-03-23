@@ -17,6 +17,12 @@ import java.util.List;
 public class SessionController {
     private ISessionService sessionService;
 
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public List<SessionDto> getSessions(){
+        return sessionService.getAll();
+    }
+
     @GetMapping("actual")
     @ResponseStatus(HttpStatus.OK)
     public List<SessionDto> getActual(){

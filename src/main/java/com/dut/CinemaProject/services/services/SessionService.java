@@ -126,6 +126,14 @@ public class SessionService implements ISessionService {
         return new SessionDto(sessionRepository.save(session));
     }
 
+    @Override
+    public List<SessionDto> getAll() {
+        return sessionRepository.findAll()
+                .stream()
+                .map(SessionDto::new)
+                .collect(Collectors.toList());
+    }
+
     private Boolean isDateAcceptable(Long hallId, LocalDateTime date, Integer movieDuration){
         if (date.isBefore(LocalDateTime.now()))
             return false;
@@ -133,15 +141,15 @@ public class SessionService implements ISessionService {
         List<Session> sessions = sessionRepository.getActualSessionsByHallId(hallId);
 
         for (Session session : sessions){
-            if ((session.getDate()
+            if ((!session.getDate()
                     .plusSeconds(session.getMovie()
                             .getDuration())
-                    .isAfter(date)
-                    && session.getDate()
-                    .isBefore(date))
-                    || (date.isBefore(session.getDate())
-                    && date.plusSeconds(movieDuration)
-                    .isAfter(session.getDate())))
+                    .isBefore(date)
+                    && !session.getDate()
+                    .isAfter(date))
+                    || (!date.isAfter(session.getDate())
+                    && !date.plusSeconds(movieDuration)
+                    .isBefore(session.getDate())))
                 return false;
         }
         return true;
@@ -156,15 +164,15 @@ public class SessionService implements ISessionService {
         sessions.removeIf(el -> el.getId().equals(sessionId));
 
         for (Session session : sessions){
-            if ((session.getDate()
+            if ((!session.getDate()
                     .plusSeconds(session.getMovie()
                             .getDuration())
-                    .isAfter(date)
-                    && session.getDate()
-                    .isBefore(date))
-                    || (date.isBefore(session.getDate())
-                    && date.plusSeconds(movieDuration)
-                    .isAfter(session.getDate())))
+                    .isBefore(date)
+                    && !session.getDate()
+                    .isAfter(date))
+                    || (!date.isAfter(session.getDate())
+                    && !date.plusSeconds(movieDuration)
+                    .isBefore(session.getDate())))
                 return false;
         }
         return true;
