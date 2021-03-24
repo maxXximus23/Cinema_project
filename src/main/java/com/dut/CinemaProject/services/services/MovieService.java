@@ -187,6 +187,7 @@ public class MovieService implements IMovieService {
         return movieRepository.findAll()
                 .stream()
                 .map(el -> new MovieTitle(el.getId(), el.getTitle()))
+                .sorted((e1, e2) -> e1.getTitle().compareToIgnoreCase( e2.getTitle()))
                 .collect(Collectors.toList());
     }
 }
