@@ -14,6 +14,8 @@ import java.util.List;
 @NoArgsConstructor
 public class SessionTicketsList {
     private Long sessionId;
+    private Long movieId;
+    private String movieTitle;
     private Integer rowsAmount;
     private Integer place;
     private List<Place> tickets;

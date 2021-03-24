@@ -51,8 +51,12 @@ public class SessionService implements ISessionService {
                 .map(ticket -> new Place(ticket.getRow(), ticket.getPlace()))
                 .collect(Collectors.toList());
 
-        return new SessionTicketsList(sessionId, sessionDb.getHall().getRowsAmount(),
-                sessionDb.getHall().getPlaces(), tickets);
+        return new SessionTicketsList(sessionId,
+                                    sessionDb.getMovie().getId(),
+                                    sessionDb.getMovie().getTitle(),
+                                    sessionDb.getHall().getRowsAmount(),
+                                    sessionDb.getHall().getPlaces(),
+                                    tickets);
     }
 
     @Override
