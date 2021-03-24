@@ -81,7 +81,7 @@ public class SessionService implements ISessionService {
                 );
 
         if (!isDateAcceptable(sessionData.getHallId(), sessionData.getDate(), movieDb.getDuration()))
-            throw new BadRequestException("Invalid date");
+            throw new BadRequestException("This date is not acceptable for this hall");
 
         Session session = new Session();
         session.setHall(hallDb);
@@ -119,7 +119,7 @@ public class SessionService implements ISessionService {
         );
 
         if (!isDateAcceptable(sessionData.getHallId(), sessionData.getDate(), session.getMovie().getDuration(), session.getId()))
-            throw new BadRequestException("Invalid date");
+            throw new BadRequestException("This date is not acceptable for this hall");
         else
             session.setDate(sessionData.getDate());
 

@@ -2,6 +2,7 @@ package com.dut.CinemaProject.api.controllers;
 
 import com.dut.CinemaProject.dto.Movie.MovieData;
 import com.dut.CinemaProject.dto.Movie.MovieDto;
+import com.dut.CinemaProject.dto.Movie.MovieTitle;
 import com.dut.CinemaProject.dto.Session.SessionShort;
 import com.dut.CinemaProject.services.interfaces.IMovieService;
 import lombok.AllArgsConstructor;
@@ -9,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -17,6 +19,12 @@ import java.util.List;
 public class MovieController {
 
     private final IMovieService movieService;
+
+    @GetMapping("titles")
+    @ResponseStatus(HttpStatus.OK)
+    public List<MovieTitle> getTitles(){
+        return movieService.getTitles();
+    }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
