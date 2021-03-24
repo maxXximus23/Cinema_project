@@ -21,4 +21,6 @@ public class Session {
     @ManyToOne
     @JoinColumn(name = "hall_id", nullable = false)
     private Hall hall;
+    @Column(name = "is_canceled")
+    private Boolean isCanceled;
 }
