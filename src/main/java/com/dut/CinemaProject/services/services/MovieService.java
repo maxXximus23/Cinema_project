@@ -31,7 +31,9 @@ public class MovieService implements IMovieService {
     public MovieDto createMovie(MovieData newMovie) {
         if (newMovie.getTitle().isBlank() || newMovie.getDescription().isBlank()
                 || newMovie.getPosterPath().isBlank() || newMovie.getActors().isBlank()
-                || newMovie.getGenres().isBlank() || newMovie.getCountry().isBlank())
+                 || newMovie.getCountry().isBlank()
+              //  || newMovie.getGenres().isBlank()
+        )
             throw new BadRequestException("Information can`t be empty");
         if (newMovie.getDuration() <= 0)
             throw new BadRequestException("Time can`t be less than 1");
@@ -44,7 +46,7 @@ public class MovieService implements IMovieService {
         movie.setDuration(newMovie.getDuration());
         movie.setActors(newMovie.getActors());
         movie.setCountry(newMovie.getCountry());
-        movie.setGenres(newMovie.getGenres());
+      //  movie.setGenres(newMovie.getGenres());
         movie.setIsBlocked(false);
 
         return new MovieDto(movieRepository.save(movie));
@@ -87,12 +89,12 @@ public class MovieService implements IMovieService {
             else
                 updateMovie.setDuration(movie.getDuration());
         }
-        if (movie.getGenres() != null) {
+      /*  if (movie.getGenres() != null) {
             if (movie.getGenres().isBlank())
                 throw new BadRequestException("Genres can`t be empty!");
             else
                 updateMovie.setGenres(movie.getGenres());
-        }
+        }*/
         if (movie.getCountry() != null) {
             if (movie.getCountry().isBlank())
                 throw new BadRequestException("Country can`t be empty!");
@@ -138,12 +140,12 @@ public class MovieService implements IMovieService {
 
         List<Movie> movies = movieRepository.findAll();
 
-        if (!genre.equals("") && movies.size() != 0)
+     /*   if (!genre.equals("") && movies.size() != 0)
             movies = movies.stream()
                     .filter(el -> el.getGenres()
                             .toLowerCase()
                             .contains(genre.toLowerCase()))
-                    .collect(Collectors.toList());
+                    .collect(Collectors.toList());*/
 
         if (!title.equals("") && movies.size() != 0)
             movies = movies.stream()
@@ -175,12 +177,12 @@ public class MovieService implements IMovieService {
 
         List<Movie> movies = movieRepository.findAll();
 
-        if (!genre.equals("") && movies.size() != 0)
+    /*    if (!genre.equals("") && movies.size() != 0)
             movies = movies.stream()
                     .filter(el -> el.getGenres()
                             .toLowerCase()
                             .contains(genre.toLowerCase()))
-                    .collect(Collectors.toList());
+                    .collect(Collectors.toList()); */
 
         if (!title.equals("") && movies.size() != 0)
             movies = movies.stream()

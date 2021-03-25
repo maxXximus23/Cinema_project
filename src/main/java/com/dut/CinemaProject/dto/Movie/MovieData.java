@@ -14,6 +14,6 @@ public class MovieData {
     private String trailerPath;
     private Integer duration;
     private String actors;
-    private String genres;
+   // private String genres;
     private String country;
 }

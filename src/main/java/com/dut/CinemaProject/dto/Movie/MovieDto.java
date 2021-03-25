@@ -18,7 +18,7 @@ public class MovieDto {
         this.trailerPath = movie.getTrailerPath();
         this.duration = movie.getDuration();
         this.actors = movie.getActors();
-        this.genres = movie.getGenres();
+        //this.genres = movie.getGenres();
         this.country = movie.getCountry();
     }
 
