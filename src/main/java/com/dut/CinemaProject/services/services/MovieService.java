@@ -199,7 +199,7 @@ public class MovieService implements IMovieService {
 
     @Override
     public List<MovieTitle> getTitles() {
-        return movieRepository.findAll()
+        return movieRepository.findAllNotBlocked()
                 .stream()
                 .map(el -> new MovieTitle(el.getId(), el.getTitle()))
                 .sorted((e1, e2) -> e1.getTitle().compareToIgnoreCase(e2.getTitle()))
