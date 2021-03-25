@@ -53,6 +53,12 @@ public class SessionController {
         return sessionService.updateSession(id, sessionData);
     }
 
+    @PostMapping("{id}/cancel")
+    @ResponseStatus(HttpStatus.OK)
+    public SessionDto cancelSession(@PathVariable Long id){
+        return sessionService.cancelSession(id);
+    }
+
     @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteSession(@PathVariable Long id){

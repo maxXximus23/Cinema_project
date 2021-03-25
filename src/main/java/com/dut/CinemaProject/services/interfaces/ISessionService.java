@@ -15,4 +15,6 @@ public interface ISessionService {
     void removeSession(Long id);
     SessionDto updateSession(Long id, SessionData sessionData);
     List<SessionDto> getAll();
+
+    SessionDto cancelSession(Long id);
 }
