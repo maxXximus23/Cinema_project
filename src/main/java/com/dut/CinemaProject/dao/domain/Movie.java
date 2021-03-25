@@ -23,4 +23,6 @@ public class Movie {
     private String actors;
     private String genres;
     private String country;
+    @Column(name="is_blocked")
+    private Boolean isBlocked;
 }

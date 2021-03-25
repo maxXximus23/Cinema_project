@@ -18,6 +18,17 @@ public class MovieController {
 
     private final IMovieService movieService;
 
+    @GetMapping("all")
+    @ResponseStatus(HttpStatus.OK)
+    public List<MovieDto> getAll(){
+        return movieService.getAll();
+    }
+    @GetMapping("blocked")
+    @ResponseStatus(HttpStatus.OK)
+    public List<MovieDto> getBlocked(){
+        return movieService.getAllBlockedMovies();
+    }
+
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<MovieDto> getMovies(@RequestParam(name = "page", defaultValue = "1") Integer page,
@@ -51,6 +62,17 @@ public class MovieController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteMovie(@PathVariable Long id){
         movieService.deleteMovie(id);
+    }
+
+    @PutMapping("block/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void blockMovie(@PathVariable Long id){
+        movieService.blockMovie(id);
+    }
+    @PutMapping("unblock/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void unblockMovie(@PathVariable Long id){
+        movieService.unblockMovie(id);
     }
 
     @PutMapping("{id}")
