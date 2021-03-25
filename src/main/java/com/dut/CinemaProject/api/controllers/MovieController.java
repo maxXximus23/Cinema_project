@@ -27,8 +27,10 @@ public class MovieController {
     }
     @GetMapping("blocked")
     @ResponseStatus(HttpStatus.OK)
-    public List<MovieDto> getBlocked(){
+    public List<MovieDto> getBlocked() {
         return movieService.getAllBlockedMovies();
+    }
+
     @GetMapping("titles")
     @ResponseStatus(HttpStatus.OK)
     public List<MovieTitle> getTitles(){

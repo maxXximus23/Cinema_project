@@ -29,11 +29,11 @@ public class MovieService implements IMovieService {
 
     @Override
     public MovieDto createMovie(MovieData newMovie) {
-        if(newMovie.getTitle().isBlank() || newMovie.getDescription().isBlank()
-                ||newMovie.getPosterPath().isBlank() || newMovie.getActors().isBlank()
-                ||newMovie.getGenres().isBlank() || newMovie.getCountry().isBlank())
+        if (newMovie.getTitle().isBlank() || newMovie.getDescription().isBlank()
+                || newMovie.getPosterPath().isBlank() || newMovie.getActors().isBlank()
+                || newMovie.getGenres().isBlank() || newMovie.getCountry().isBlank())
             throw new BadRequestException("Information can`t be empty");
-        if(newMovie.getDuration()<=0)
+        if (newMovie.getDuration() <= 0)
             throw new BadRequestException("Time can`t be less than 1");
 
         Movie movie = new Movie();
@@ -60,47 +60,47 @@ public class MovieService implements IMovieService {
     public MovieDto updateMovie(Long id, MovieData movie) {
         Movie updateMovie = movieRepository.findById(id).orElseThrow(() -> new ItemNotFoundException("Movie not found"));
 
-        if(movie.getTitle()!=null) {
-            if(movie.getTitle().isBlank())
+        if (movie.getTitle() != null) {
+            if (movie.getTitle().isBlank())
                 throw new BadRequestException("Title can`t be empty!");
             else
                 updateMovie.setTitle(movie.getTitle());
         }
-        if(movie.getDescription()!=null) {
-            if(movie.getDescription().isBlank())
+        if (movie.getDescription() != null) {
+            if (movie.getDescription().isBlank())
                 throw new BadRequestException("Description can`t be empty!");
             else
                 updateMovie.setDescription(movie.getDescription());
         }
-        if(movie.getTrailerPath()!=null) {
+        if (movie.getTrailerPath() != null) {
             updateMovie.setTrailerPath(movie.getTrailerPath());
         }
-        if(movie.getPosterPath()!=null) {
-            if(movie.getPosterPath().isBlank())
+        if (movie.getPosterPath() != null) {
+            if (movie.getPosterPath().isBlank())
                 throw new BadRequestException("PosterPath can`t be empty!");
             else
                 updateMovie.setPosterPath(movie.getPosterPath());
         }
-        if(movie.getDuration()!=null) {
-            if(movie.getDuration()<=0)
+        if (movie.getDuration() != null) {
+            if (movie.getDuration() <= 0)
                 throw new BadRequestException("Time can`t be less than 1!");
             else
                 updateMovie.setDuration(movie.getDuration());
         }
-        if(movie.getGenres()!=null) {
-            if(movie.getGenres().isBlank())
+        if (movie.getGenres() != null) {
+            if (movie.getGenres().isBlank())
                 throw new BadRequestException("Genres can`t be empty!");
             else
                 updateMovie.setGenres(movie.getGenres());
         }
-        if(movie.getCountry()!=null) {
-            if(movie.getCountry().isBlank())
+        if (movie.getCountry() != null) {
+            if (movie.getCountry().isBlank())
                 throw new BadRequestException("Country can`t be empty!");
             else
                 updateMovie.setCountry(movie.getCountry());
         }
-        if(movie.getActors()!=null) {
-            if(movie.getActors().isBlank())
+        if (movie.getActors() != null) {
+            if (movie.getActors().isBlank())
                 throw new BadRequestException("Actors can`t be empty!");
             else
                 updateMovie.setActors(movie.getActors());
@@ -136,7 +136,7 @@ public class MovieService implements IMovieService {
         if (perPage < 1)
             throw new BadRequestException("On page must be at list one element!");
 
-        List<Movie> movies =  movieRepository.findAll();
+        List<Movie> movies = movieRepository.findAll();
 
         if (!genre.equals("") && movies.size() != 0)
             movies = movies.stream()
@@ -157,9 +157,9 @@ public class MovieService implements IMovieService {
 
         if (movies.size() >= page * perPage)
             return movies.subList((page - 1) * perPage, perPage * page)
-                        .stream()
-                        .map(MovieDto::new)
-                        .collect(Collectors.toList());
+                    .stream()
+                    .map(MovieDto::new)
+                    .collect(Collectors.toList());
         else
             return movies.subList((page - 1) * perPage, movies.size())
                     .stream()
@@ -189,20 +189,20 @@ public class MovieService implements IMovieService {
                             .contains(title.toLowerCase()))
                     .collect(Collectors.toList());
 
-        double pages =  (double)movies.size()/((double) perPage);
+        double pages = (double) movies.size() / ((double) perPage);
 
         if (pages == (int) pages)
             return (int) pages;
         else
-            return  (int) (pages + 1);
+            return (int) (pages + 1);
     }
-  
+
     @Override
     public List<MovieTitle> getTitles() {
         return movieRepository.findAll()
                 .stream()
                 .map(el -> new MovieTitle(el.getId(), el.getTitle()))
-                .sorted((e1, e2) -> e1.getTitle().compareToIgnoreCase( e2.getTitle()))
+                .sorted((e1, e2) -> e1.getTitle().compareToIgnoreCase(e2.getTitle()))
                 .collect(Collectors.toList());
     }
 
@@ -228,5 +228,6 @@ public class MovieService implements IMovieService {
     @Override
     public List<MovieDto> getAllBlockedMovies() {
         return movieRepository.findMovieByIsBlocked(true).stream().map(MovieDto::new).collect(Collectors.toList());
-      
+
+    }
 }
