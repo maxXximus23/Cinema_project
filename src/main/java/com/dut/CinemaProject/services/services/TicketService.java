@@ -56,6 +56,9 @@ public class TicketService implements ITicketService {
         Session session = sessionRepository.findById(purchaseTicket.getSessionId())
                 .orElseThrow(ItemNotFoundException::new);
 
+        if (session.getIsCanceled())
+            throw new BadRequestException("Session is already canceled!");
+
         if(session.getHall().getRowsAmount() < purchaseTicket.getRow())
             throw new ValidationException("Row out of bounce");
 
@@ -90,6 +93,9 @@ public class TicketService implements ITicketService {
 
         Session session = sessionRepository.findById(ticketsData.getSessionId())
                 .orElseThrow(() -> new ItemNotFoundException("Session not found"));
+
+        if (session.getIsCanceled())
+            throw new BadRequestException("Session is already canceled!");
 
         User user = userRepository.findById(ticketsData.getUserId())
                 .orElseThrow(() -> new ItemNotFoundException("User not found"));
