@@ -22,6 +22,7 @@ public class TicketDto {
         this.row = ticket.getRow();
         this.place = ticket.getPlace();
         this.posterPath = ticket.getSession().getMovie().getPosterPath();
+        this.isCanceled = ticket.getSession().getIsCanceled();
     }
 
     private Long id;
@@ -33,4 +34,5 @@ public class TicketDto {
     private Integer row;
     private Integer place;
     private String posterPath;
+    private Boolean isCanceled;
 }

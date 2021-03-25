@@ -87,6 +87,7 @@ public class SessionService implements ISessionService {
         session.setHall(hallDb);
         session.setMovie(movieDb);
         session.setDate(sessionData.getDate());
+        session.setIsCanceled(false);
 
         return new SessionDto(sessionRepository.save(session));
     }
@@ -132,6 +133,19 @@ public class SessionService implements ISessionService {
                 .stream()
                 .map(SessionDto::new)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public SessionDto cancelSession(Long id) {
+        Session sessionDb = sessionRepository.findById(id)
+                .orElseThrow(() -> new ItemNotFoundException("Such session does not exist!"));
+
+        if (sessionDb.getDate().isBefore(LocalDateTime.now()))
+            throw new BadRequestException("Session is already outdated!");
+
+        sessionDb.setIsCanceled(!sessionDb.getIsCanceled());
+
+        return new SessionDto(sessionRepository.save(sessionDb));
     }
 
     private Boolean isDateAcceptable(Long hallId, LocalDateTime date, Integer movieDuration){

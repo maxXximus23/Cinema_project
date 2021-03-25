@@ -20,6 +20,7 @@ public class SessionDto {
         this.moviePoster = session.getMovie().getPosterPath();
         this.hallName = session.getHall().getName();
         this.date = session.getDate();
+        this.isCanceled = session.getIsCanceled();
     }
 
     private Long id;
@@ -29,4 +30,5 @@ public class SessionDto {
     private String moviePoster;
     private String hallName;
     private LocalDateTime date;
+    private Boolean isCanceled;
 }
