@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("halls")
@@ -43,5 +45,11 @@ public class HallController {
     @ResponseStatus(HttpStatus.OK)
     public HallDto updateHall(@PathVariable Long id, @RequestBody UpdateHallData hall){
         return  hallService.updateHall(id, hall);
+    }
+
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public List<HallDto> getAll(){
+        return hallService.getAllHalls();
     }
 }

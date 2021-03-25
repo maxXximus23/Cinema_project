@@ -5,6 +5,7 @@ import com.dut.CinemaProject.dao.repos.MovieRepository;
 import com.dut.CinemaProject.dao.repos.SessionRepository;
 import com.dut.CinemaProject.dto.Movie.MovieData;
 import com.dut.CinemaProject.dto.Movie.MovieDto;
+import com.dut.CinemaProject.dto.Movie.MovieTitle;
 import com.dut.CinemaProject.dto.Session.SessionShort;
 import com.dut.CinemaProject.exceptions.BadRequestException;
 import com.dut.CinemaProject.exceptions.ItemNotFoundException;
@@ -12,7 +13,11 @@ import com.dut.CinemaProject.services.interfaces.IMovieService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 @Service
@@ -191,6 +196,15 @@ public class MovieService implements IMovieService {
         else
             return  (int) (pages + 1);
     }
+  
+    @Override
+    public List<MovieTitle> getTitles() {
+        return movieRepository.findAll()
+                .stream()
+                .map(el -> new MovieTitle(el.getId(), el.getTitle()))
+                .sorted((e1, e2) -> e1.getTitle().compareToIgnoreCase( e2.getTitle()))
+                .collect(Collectors.toList());
+    }
 
     @Override
     public List<MovieDto> getAll() {
@@ -214,5 +228,5 @@ public class MovieService implements IMovieService {
     @Override
     public List<MovieDto> getAllBlockedMovies() {
         return movieRepository.findMovieByIsBlocked(true).stream().map(MovieDto::new).collect(Collectors.toList());
-    }
+      
 }

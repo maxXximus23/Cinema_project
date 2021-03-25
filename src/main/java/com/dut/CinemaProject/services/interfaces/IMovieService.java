@@ -2,9 +2,11 @@ package com.dut.CinemaProject.services.interfaces;
 
 import com.dut.CinemaProject.dto.Movie.MovieData;
 import com.dut.CinemaProject.dto.Movie.MovieDto;
+import com.dut.CinemaProject.dto.Movie.MovieTitle;
 import com.dut.CinemaProject.dto.Session.SessionShort;
 
 import java.util.List;
+import java.util.Map;
 
 public interface IMovieService {
     MovieDto createMovie(MovieData newMovie);
@@ -14,6 +16,7 @@ public interface IMovieService {
     List<SessionShort> getSessions(Long id);
     List<MovieDto> getMovies(Integer page, Integer perPage, String genre, String title);
     Integer getPagesAmount(Integer perPage, String genre, String title);
+    List<MovieTitle> getTitles();
     List<MovieDto> getAll();
     void blockMovie(Long id);
     void unblockMovie(Long id);

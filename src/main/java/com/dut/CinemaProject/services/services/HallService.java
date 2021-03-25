@@ -11,6 +11,9 @@ import com.dut.CinemaProject.services.interfaces.IHallService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @AllArgsConstructor
 public class HallService implements IHallService {
@@ -74,5 +77,13 @@ public class HallService implements IHallService {
     public HallDto getHallById(Long id) {
         return new HallDto(hallRepository.findById(id)
                 .orElseThrow(() -> new ItemNotFoundException("Hall is not found")));
+    }
+
+    @Override
+    public List<HallDto> getAllHalls() {
+        return hallRepository.findAll()
+                .stream()
+                .map(HallDto::new)
+                .collect(Collectors.toList());
     }
 }
