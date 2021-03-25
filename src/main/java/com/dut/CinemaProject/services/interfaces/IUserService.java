@@ -4,6 +4,7 @@ import com.dut.CinemaProject.dto.User.AuthenticationRequestDto;
 import com.dut.CinemaProject.dto.User.UserDto;
 import com.dut.CinemaProject.dto.User.UserRegisterData;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
 
@@ -22,4 +23,8 @@ public interface IUserService {
     void delete(Long id);
 
     String changeUserPasswordById(Long userId, String newPassword, String oldPassword);
+
+    void blockUser(Long id);
+
+    void unblockUser(Long id);
 }

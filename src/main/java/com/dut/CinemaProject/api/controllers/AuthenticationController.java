@@ -43,5 +43,10 @@ public class AuthenticationController {
         userService.isEmailFree(email);
     }
 
+    @GetMapping("is-admin-true")
+    @ResponseStatus(HttpStatus.OK)
+    public boolean isAdminTrue(){
+        return true;
+    }
 
 }

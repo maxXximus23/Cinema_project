@@ -8,6 +8,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("users")
@@ -28,5 +30,17 @@ public class UserController {
         return userService.changeUserPasswordById(userId, changePassword.getNewPassword(),
                 changePassword.getOldPassword());
 
+    }
+
+    @PutMapping("{id}/block")
+    @ResponseStatus(HttpStatus.OK)
+    public void blockUser(@PathVariable Long id){
+        userService.blockUser(id);
+    }
+
+    @PutMapping("{id}/unblock")
+    @ResponseStatus(HttpStatus.OK)
+    public void unblockUser(@PathVariable Long id){
+        userService.unblockUser(id);
     }
 }

@@ -11,7 +11,7 @@ import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
-@RequestMapping("reviews")
+@RequestMapping("/reviews")
 @AllArgsConstructor
 public class ReviewController {
     private final IReviewService reviewService;

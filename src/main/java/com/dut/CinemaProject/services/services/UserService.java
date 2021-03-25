@@ -15,12 +15,18 @@ import com.dut.CinemaProject.services.interfaces.IUserService;
 import com.dut.CinemaProject.services.mapper.UserMapper;
 import lombok.AllArgsConstructor;
 import org.passay.*;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
+
+import javax.servlet.http.HttpServletResponse;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.channels.AcceptPendingException;
+import java.nio.file.AccessDeniedException;
 import java.nio.file.FileSystemNotFoundException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -170,6 +176,36 @@ public class UserService implements IUserService {
         else {
             throw new ValidationException(passwordValidator.getMessages(ruleResult).toString());
         }
+    }
+
+    @Override
+    public void blockUser(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("No such user in database"));
+
+        if(user.getStatus().equals(Status.BLOCKED)){
+            throw new BadRequestException("User is already blocked");
+        }
+
+        Role adminRole = roleRepository.findByName("ROLE_ADMIN");
+
+        user.setStatus(Status.BLOCKED);
+        userRepository.save(user);
+    }
+
+    @Override
+    public void unblockUser(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("No such user in database"));
+
+        if(user.getStatus().equals(Status.NOT_ACTIVE) || user.getStatus().equals(Status.ACTIVE)){
+            throw new BadRequestException("User is already unblocked");
+        }
+
+        Role adminRole = roleRepository.findByName("ROLE_USER");
+
+        user.setStatus(Status.NOT_ACTIVE);
+        userRepository.save(user);
     }
 }
 
