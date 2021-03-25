@@ -29,7 +29,9 @@ public class MovieService implements IMovieService {
 
     @Override
     public MovieDto createMovie(MovieData newMovie) {
-        if(newMovie.getTitle().isBlank() || newMovie.getDescription().isBlank() ||newMovie.getPosterPath().isBlank() ||newMovie.getTrailerPath().isBlank())
+        if(newMovie.getTitle().isBlank() || newMovie.getDescription().isBlank()
+                ||newMovie.getPosterPath().isBlank() || newMovie.getActors().isBlank()
+                ||newMovie.getGenres().isBlank() || newMovie.getCountry().isBlank())
             throw new BadRequestException("Information can`t be empty");
         if(newMovie.getDuration()<=0)
             throw new BadRequestException("Time can`t be less than 1");
@@ -43,6 +45,7 @@ public class MovieService implements IMovieService {
         movie.setActors(newMovie.getActors());
         movie.setCountry(newMovie.getCountry());
         movie.setGenres(newMovie.getGenres());
+        movie.setIsBlocked(false);
 
         return new MovieDto(movieRepository.save(movie));
     }
@@ -70,10 +73,7 @@ public class MovieService implements IMovieService {
                 updateMovie.setDescription(movie.getDescription());
         }
         if(movie.getTrailerPath()!=null) {
-            if(movie.getTrailerPath().isBlank())
-                throw new BadRequestException("TrailerPath can`t be empty!");
-            else
-                updateMovie.setTrailerPath(movie.getTrailerPath());
+            updateMovie.setTrailerPath(movie.getTrailerPath());
         }
         if(movie.getPosterPath()!=null) {
             if(movie.getPosterPath().isBlank())
@@ -87,10 +87,25 @@ public class MovieService implements IMovieService {
             else
                 updateMovie.setDuration(movie.getDuration());
         }
+        if(movie.getGenres()!=null) {
+            if(movie.getGenres().isBlank())
+                throw new BadRequestException("Genres can`t be empty!");
+            else
+                updateMovie.setGenres(movie.getGenres());
+        }
+        if(movie.getCountry()!=null) {
+            if(movie.getCountry().isBlank())
+                throw new BadRequestException("Country can`t be empty!");
+            else
+                updateMovie.setCountry(movie.getCountry());
+        }
+        if(movie.getActors()!=null) {
+            if(movie.getActors().isBlank())
+                throw new BadRequestException("Actors can`t be empty!");
+            else
+                updateMovie.setActors(movie.getActors());
+        }
 
-        updateMovie.setGenres(movie.getGenres());
-        updateMovie.setCountry(movie.getCountry());
-        updateMovie.setActors(movie.getActors());
 
         return new MovieDto(movieRepository.save(updateMovie));
     }
@@ -181,7 +196,7 @@ public class MovieService implements IMovieService {
         else
             return  (int) (pages + 1);
     }
-
+  
     @Override
     public List<MovieTitle> getTitles() {
         return movieRepository.findAll()
@@ -190,4 +205,28 @@ public class MovieService implements IMovieService {
                 .sorted((e1, e2) -> e1.getTitle().compareToIgnoreCase( e2.getTitle()))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<MovieDto> getAll() {
+        return movieRepository.findMovieByIsBlocked(false).stream().map(MovieDto::new).collect(Collectors.toList());
+    }
+
+    @Override
+    public void blockMovie(Long id) {
+        Movie movie = movieRepository.findById(id).orElseThrow(() -> new ItemNotFoundException("Movie not found"));
+        movie.setIsBlocked(true);
+        movieRepository.save(movie);
+    }
+
+    @Override
+    public void unblockMovie(Long id) {
+        Movie movie = movieRepository.findById(id).orElseThrow(() -> new ItemNotFoundException("Movie not found"));
+        movie.setIsBlocked(false);
+        movieRepository.save(movie);
+    }
+
+    @Override
+    public List<MovieDto> getAllBlockedMovies() {
+        return movieRepository.findMovieByIsBlocked(true).stream().map(MovieDto::new).collect(Collectors.toList());
+      
 }

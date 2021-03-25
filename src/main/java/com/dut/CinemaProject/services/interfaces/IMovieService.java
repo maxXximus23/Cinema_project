@@ -17,4 +17,8 @@ public interface IMovieService {
     List<MovieDto> getMovies(Integer page, Integer perPage, String genre, String title);
     Integer getPagesAmount(Integer perPage, String genre, String title);
     List<MovieTitle> getTitles();
+    List<MovieDto> getAll();
+    void blockMovie(Long id);
+    void unblockMovie(Long id);
+    List<MovieDto> getAllBlockedMovies();
 }
