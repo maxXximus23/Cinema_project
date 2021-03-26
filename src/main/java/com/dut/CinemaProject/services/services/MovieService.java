@@ -1,5 +1,6 @@
 package com.dut.CinemaProject.services.services;
 
+import com.dut.CinemaProject.dao.domain.Genre;
 import com.dut.CinemaProject.dao.domain.Movie;
 import com.dut.CinemaProject.dao.repos.MovieRepository;
 import com.dut.CinemaProject.dao.repos.SessionRepository;
@@ -13,11 +14,7 @@ import com.dut.CinemaProject.services.interfaces.IMovieService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,7 +28,7 @@ public class MovieService implements IMovieService {
     public MovieDto createMovie(MovieData newMovie) {
         if (newMovie.getTitle().isBlank() || newMovie.getDescription().isBlank()
                 || newMovie.getPosterPath().isBlank() || newMovie.getActors().isBlank()
-                || newMovie.getGenres().isBlank() || newMovie.getCountry().isBlank())
+                 || newMovie.getCountry().isBlank())
             throw new BadRequestException("Information can`t be empty");
         if (newMovie.getDuration() <= 0)
             throw new BadRequestException("Time can`t be less than 1");
@@ -87,11 +84,8 @@ public class MovieService implements IMovieService {
             else
                 updateMovie.setDuration(movie.getDuration());
         }
-        if (movie.getGenres() != null) {
-            if (movie.getGenres().isBlank())
-                throw new BadRequestException("Genres can`t be empty!");
-            else
-                updateMovie.setGenres(movie.getGenres());
+       if (movie.getGenres() != null) {
+           updateMovie.setGenres(movie.getGenres());
         }
         if (movie.getCountry() != null) {
             if (movie.getCountry().isBlank())
@@ -105,7 +99,6 @@ public class MovieService implements IMovieService {
             else
                 updateMovie.setActors(movie.getActors());
         }
-
 
         return new MovieDto(movieRepository.save(updateMovie));
     }
@@ -129,7 +122,7 @@ public class MovieService implements IMovieService {
     }
 
     @Override
-    public List<MovieDto> getMovies(Integer page, Integer perPage, String genre, String title) {
+    public List<MovieDto> getMovies(Integer page, Integer perPage, List<Genre> genres, String title) {
         if (page < 1)
             throw new BadRequestException("Page can not be less than 1!");
 
@@ -138,12 +131,9 @@ public class MovieService implements IMovieService {
 
         List<Movie> movies = movieRepository.findAll();
 
-        if (!genre.equals("") && movies.size() != 0)
-            movies = movies.stream()
-                    .filter(el -> el.getGenres()
-                            .toLowerCase()
-                            .contains(genre.toLowerCase()))
-                    .collect(Collectors.toList());
+        if(!genres.isEmpty()){
+            movies = movieRepository.findMoviesByGenres(genres);
+        }
 
         if (!title.equals("") && movies.size() != 0)
             movies = movies.stream()
@@ -169,18 +159,15 @@ public class MovieService implements IMovieService {
     }
 
     @Override
-    public Integer getPagesAmount(Integer perPage, String genre, String title) {
+    public Integer getPagesAmount(Integer perPage, List<Genre> genres, String title) {
         if (perPage < 1)
             throw new BadRequestException("On page must be at list one element!");
 
         List<Movie> movies = movieRepository.findAll();
 
-        if (!genre.equals("") && movies.size() != 0)
-            movies = movies.stream()
-                    .filter(el -> el.getGenres()
-                            .toLowerCase()
-                            .contains(genre.toLowerCase()))
-                    .collect(Collectors.toList());
+        if(!genres.isEmpty()){
+            movies = movieRepository.findMoviesByGenres(genres);
+        }
 
         if (!title.equals("") && movies.size() != 0)
             movies = movies.stream()
