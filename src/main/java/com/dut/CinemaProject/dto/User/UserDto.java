@@ -1,12 +1,18 @@
 package com.dut.CinemaProject.dto.User;
 
 import com.dut.CinemaProject.dao.domain.User;
-import lombok.Getter;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.Data;
 
-@Getter
-@Setter
+@Data
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class UserDto {
+
+    private Long id;
+    private String email;
+    private String firstName;
+    private String lastName;
+
     public UserDto(User user){
         this.id = user.getId();
         this.email = user.getEmail();
@@ -14,8 +20,4 @@ public class UserDto {
         this.lastName = user.getLastName();
     }
 
-    private Long id;
-    private String email;
-    private String firstName;
-    private String lastName;
 }

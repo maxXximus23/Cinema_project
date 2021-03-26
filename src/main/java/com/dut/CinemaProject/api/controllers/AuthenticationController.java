@@ -13,7 +13,7 @@ import java.util.Map;
 @CrossOrigin(origins = "http://localhost:3000")
 @AllArgsConstructor
 @RestController
-@RequestMapping("users")
+@RequestMapping("auth")
 public class AuthenticationController {
 
     private final UserService userService;
@@ -29,7 +29,6 @@ public class AuthenticationController {
     public void logout(@RequestBody Map<String, String> json){
         userService.logout(json);
     }
-
 
     @PostMapping("register")
     @ResponseStatus(HttpStatus.OK)

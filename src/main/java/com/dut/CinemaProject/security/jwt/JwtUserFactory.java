@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public final class JwtUserFactory {
 
-    public static JwtUser create(User user){
+    public static JwtUser create(User user) {
         return new JwtUser(
                 user.getId(),
                 user.getFirstName(),
@@ -23,13 +23,14 @@ public final class JwtUserFactory {
                 user.getEmail(),
                 user.getStatus().equals(Status.ACTIVE),
                 user.getUpdated(),
-                mapToGrantedAuthorities(new ArrayList<>(user.getRoles())));
+                mapToGrantedAuthorities(new ArrayList<>(user.getRoles()))
+        );
     }
 
-    private static List<GrantedAuthority> mapToGrantedAuthorities(List<Role> userRoles){
+    private static List<GrantedAuthority> mapToGrantedAuthorities(List<Role> userRoles) {
         return userRoles.stream()
-                .map(role -> new SimpleGrantedAuthority(role.getName()))
-                .collect(Collectors.toList());
+                .map(role ->
+                        new SimpleGrantedAuthority(role.getName())
+                ).collect(Collectors.toList());
     }
-
 }

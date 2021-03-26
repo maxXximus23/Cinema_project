@@ -1,5 +1,6 @@
 package com.dut.CinemaProject.services.interfaces;
 
+import com.dut.CinemaProject.dao.domain.User;
 import com.dut.CinemaProject.dto.User.AuthenticationRequestDto;
 import com.dut.CinemaProject.dto.User.UserDto;
 import com.dut.CinemaProject.dto.User.UserRegisterData;
@@ -18,13 +19,14 @@ public interface IUserService {
 
     List<UserDto> getAll();
 
+    User findByUsername(String username);
+
     UserDto findById(Long id);
 
     void delete(Long id);
 
     String changeUserPasswordById(Long userId, String newPassword, String oldPassword);
 
-    void blockUser(Long id);
+    UserDto blockUser(Long id);
 
-    void unblockUser(Long id);
 }

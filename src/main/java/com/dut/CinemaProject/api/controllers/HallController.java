@@ -41,7 +41,5 @@ public class HallController {
 
     @PutMapping("{id}")
     @ResponseStatus(HttpStatus.OK)
-    public HallDto updateHall(@PathVariable Long id, @RequestBody UpdateHallData hall){
-        return  hallService.updateHall(id, hall);
-    }
+    public HallDto updateHall(@PathVariable Long id, @RequestBody UpdateHallData hall){ return  hallService.updateHall(id, hall); }
 }

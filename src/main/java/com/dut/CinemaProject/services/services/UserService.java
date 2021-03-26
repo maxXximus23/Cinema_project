@@ -13,20 +13,17 @@ import com.dut.CinemaProject.exceptions.*;
 import com.dut.CinemaProject.security.jwt.JwtTokenProvider;
 import com.dut.CinemaProject.services.interfaces.IUserService;
 import com.dut.CinemaProject.services.mapper.UserMapper;
+
 import lombok.AllArgsConstructor;
+
 import org.passay.*;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.channels.AcceptPendingException;
-import java.nio.file.AccessDeniedException;
 import java.nio.file.FileSystemNotFoundException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -41,15 +38,14 @@ public class UserService implements IUserService {
     private final JwtTokenProvider jwtTokenProvider;
     private final JwtBlacklistService jwtBlacklistService;
 
-
     @Override
     public Map<String, String> login(AuthenticationRequestDto requestDto) {
 
         String email = requestDto.getEmail();
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException("User not found"));
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
 
         checkUserStatus(user);
-
         user.setStatus(Status.ACTIVE);
         userRepository.save(user);
 
@@ -61,8 +57,6 @@ public class UserService implements IUserService {
         response.put("token", jwtTokenProvider.createToken(email, user.getRoles()));
 
         return response;
-
-
     }
 
     @Override
@@ -93,7 +87,6 @@ public class UserService implements IUserService {
 
         isEmailFree(userRegisterData.getEmail());
 
-
         Role roleUser = roleRepository.findByName("ROLE_USER");
         List<Role> userRoles = new ArrayList<>();
         userRoles.add(roleUser);
@@ -116,9 +109,15 @@ public class UserService implements IUserService {
     }
 
     @Override
+    public User findByUsername(String username) {
+        Optional<User> result = userRepository.findByEmail(username);
+        return result.get();
+    }
+
+    @Override
     public UserDto findById(Long id) {
         return new UserDto(userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException("No such user in database")));
+        .orElseThrow(() -> new UserNotFoundException("User with id " + id + " not found")));
     }
 
     @Override
@@ -179,33 +178,13 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public void blockUser(Long id) {
+    public UserDto blockUser(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("No such user in database"));
 
-        if(user.getStatus().equals(Status.BLOCKED)){
-            throw new BadRequestException("User is already blocked");
-        }
-
-        Role adminRole = roleRepository.findByName("ROLE_ADMIN");
-
-        user.setStatus(Status.BLOCKED);
-        userRepository.save(user);
+        user.setStatus(user.getStatus().equals(Status.BLOCKED) ? Status.NOT_ACTIVE : Status.BLOCKED);
+        return new UserDto(userRepository.save(user));
     }
 
-    @Override
-    public void unblockUser(Long id) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException("No such user in database"));
-
-        if(user.getStatus().equals(Status.NOT_ACTIVE) || user.getStatus().equals(Status.ACTIVE)){
-            throw new BadRequestException("User is already unblocked");
-        }
-
-        Role adminRole = roleRepository.findByName("ROLE_USER");
-
-        user.setStatus(Status.NOT_ACTIVE);
-        userRepository.save(user);
-    }
 }
 

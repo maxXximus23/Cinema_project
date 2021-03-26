@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 @RequestMapping("users")
 @AllArgsConstructor
 public class UserController {
+
     private final IAccountService accountService;
     private final IUserService userService;
 
@@ -34,13 +35,8 @@ public class UserController {
 
     @PutMapping("{id}/block")
     @ResponseStatus(HttpStatus.OK)
-    public void blockUser(@PathVariable Long id){
-        userService.blockUser(id);
+    public UserDto blockUser(@PathVariable Long id){
+        return userService.blockUser(id);
     }
 
-    @PutMapping("{id}/unblock")
-    @ResponseStatus(HttpStatus.OK)
-    public void unblockUser(@PathVariable Long id){
-        userService.unblockUser(id);
-    }
 }
