@@ -13,11 +13,7 @@ import com.dut.CinemaProject.services.interfaces.IMovieService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,9 +27,7 @@ public class MovieService implements IMovieService {
     public MovieDto createMovie(MovieData newMovie) {
         if (newMovie.getTitle().isBlank() || newMovie.getDescription().isBlank()
                 || newMovie.getPosterPath().isBlank() || newMovie.getActors().isBlank()
-                 || newMovie.getCountry().isBlank()
-              //  || newMovie.getGenres().isBlank()
-        )
+                 || newMovie.getCountry().isBlank())
             throw new BadRequestException("Information can`t be empty");
         if (newMovie.getDuration() <= 0)
             throw new BadRequestException("Time can`t be less than 1");
@@ -46,7 +40,7 @@ public class MovieService implements IMovieService {
         movie.setDuration(newMovie.getDuration());
         movie.setActors(newMovie.getActors());
         movie.setCountry(newMovie.getCountry());
-      //  movie.setGenres(newMovie.getGenres());
+        movie.setGenres(newMovie.getGenres());
         movie.setIsBlocked(false);
 
         return new MovieDto(movieRepository.save(movie));
@@ -89,12 +83,9 @@ public class MovieService implements IMovieService {
             else
                 updateMovie.setDuration(movie.getDuration());
         }
-      /*  if (movie.getGenres() != null) {
-            if (movie.getGenres().isBlank())
-                throw new BadRequestException("Genres can`t be empty!");
-            else
-                updateMovie.setGenres(movie.getGenres());
-        }*/
+       if (movie.getGenres() != null) {
+           updateMovie.setGenres(movie.getGenres());
+        }
         if (movie.getCountry() != null) {
             if (movie.getCountry().isBlank())
                 throw new BadRequestException("Country can`t be empty!");
@@ -107,7 +98,6 @@ public class MovieService implements IMovieService {
             else
                 updateMovie.setActors(movie.getActors());
         }
-
 
         return new MovieDto(movieRepository.save(updateMovie));
     }

@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "movies")
@@ -32,5 +33,5 @@ public class Movie {
     @JoinTable(name = "movie_genres",
             joinColumns = {@JoinColumn(name = "movie_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "genre_id", referencedColumnName = "id")})
-    private List<Genre> genres;
+    private Set<Genre> genres;
 }

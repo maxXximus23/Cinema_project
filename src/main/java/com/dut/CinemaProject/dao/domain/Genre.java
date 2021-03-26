@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "genres")
@@ -20,5 +21,5 @@ public class Genre {
 
     @JsonIgnore
     @ManyToMany(mappedBy = "genres", fetch = FetchType.LAZY)
-    private List<Movie> movies;
+    private Set<Movie> movies;
 }
