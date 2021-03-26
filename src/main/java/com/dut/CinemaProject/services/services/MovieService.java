@@ -1,5 +1,6 @@
 package com.dut.CinemaProject.services.services;
 
+import com.dut.CinemaProject.dao.domain.Genre;
 import com.dut.CinemaProject.dao.domain.Movie;
 import com.dut.CinemaProject.dao.repos.MovieRepository;
 import com.dut.CinemaProject.dao.repos.SessionRepository;
@@ -121,7 +122,7 @@ public class MovieService implements IMovieService {
     }
 
     @Override
-    public List<MovieDto> getMovies(Integer page, Integer perPage, String genre, String title) {
+    public List<MovieDto> getMovies(Integer page, Integer perPage, List<Genre> genres, String title) {
         if (page < 1)
             throw new BadRequestException("Page can not be less than 1!");
 
@@ -130,12 +131,9 @@ public class MovieService implements IMovieService {
 
         List<Movie> movies = movieRepository.findAll();
 
-     /*   if (!genre.equals("") && movies.size() != 0)
-            movies = movies.stream()
-                    .filter(el -> el.getGenres()
-                            .toLowerCase()
-                            .contains(genre.toLowerCase()))
-                    .collect(Collectors.toList());*/
+        if(!genres.isEmpty()){
+            movies = movieRepository.findMoviesByGenres(genres);
+        }
 
         if (!title.equals("") && movies.size() != 0)
             movies = movies.stream()
@@ -161,18 +159,15 @@ public class MovieService implements IMovieService {
     }
 
     @Override
-    public Integer getPagesAmount(Integer perPage, String genre, String title) {
+    public Integer getPagesAmount(Integer perPage, List<Genre> genres, String title) {
         if (perPage < 1)
             throw new BadRequestException("On page must be at list one element!");
 
         List<Movie> movies = movieRepository.findAll();
 
-    /*    if (!genre.equals("") && movies.size() != 0)
-            movies = movies.stream()
-                    .filter(el -> el.getGenres()
-                            .toLowerCase()
-                            .contains(genre.toLowerCase()))
-                    .collect(Collectors.toList()); */
+        if(!genres.isEmpty()){
+            movies = movieRepository.findMoviesByGenres(genres);
+        }
 
         if (!title.equals("") && movies.size() != 0)
             movies = movies.stream()
