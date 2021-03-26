@@ -1,11 +1,8 @@
 package com.dut.CinemaProject.dto.Movie;
 
-import com.dut.CinemaProject.dao.domain.Genre;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.Set;
 
 @Getter
 @Setter
@@ -17,6 +14,6 @@ public class MovieData {
     private String trailerPath;
     private Integer duration;
     private String actors;
-    private Set<Genre> genres;
+    private String genres;
     private String country;
 }
