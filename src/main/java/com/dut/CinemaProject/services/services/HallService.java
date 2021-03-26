@@ -22,7 +22,9 @@ public class HallService implements IHallService {
 
     @Override
     public HallDto createHall(NewHall newHall) {
-        if(newHall.getName().isBlank() || newHall.getPlaces() < 1 || newHall.getRowsAmount() < 1)
+        if(newHall.getName().isBlank() || newHall.getPlaces() == null || newHall.getRowsAmount() == null)
+            throw new BadRequestException("The info about the hall is not full");
+        else if(newHall.getPlaces() < 1 || newHall.getRowsAmount() < 1)
             throw new BadRequestException("Invalid info about the Hall");
         else if (hallRepository.findByName(newHall.getName()).size() > 0)
             throw new BadRequestException("This name is already used");
@@ -49,7 +51,7 @@ public class HallService implements IHallService {
         if(hall.getName() != null){
             if(hall.getName().isBlank())
                 throw new BadRequestException("Name can`t be empty");
-            else if(hallRepository.findByName(hall.getName()).size() > 0)
+            else if(hallRepository.findByName(hall.getName()).size() > 0 && !hall.getName().equals(updateHall.getName()))
                 throw new BadRequestException("This name is already used");
             else
                 updateHall.setName(hall.getName());
