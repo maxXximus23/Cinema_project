@@ -186,5 +186,20 @@ public class UserService implements IUserService {
         return new UserDto(userRepository.save(user));
     }
 
+    @Override
+    public UserDto changeAdminStatus(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("No such user in database"));
+
+        Role roleAdmin = roleRepository.findByName("ROLE_ADMIN");
+
+        if (user.getRoles().contains(roleAdmin))
+            user.getRoles().remove(roleAdmin);
+        else
+            user.getRoles().add(roleAdmin);
+
+        return new UserDto(userRepository.save(user));
+    }
+
 }
 

@@ -8,7 +8,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -37,6 +37,18 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     public UserDto blockUser(@PathVariable Long id){
         return userService.blockUser(id);
+    }
+
+    @PutMapping("{id}/changeAdminStatus")
+    @ResponseStatus(HttpStatus.OK)
+    public UserDto changeAdminStatus(@PathVariable Long id){
+        return userService.changeAdminStatus(id);
+    }
+
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public List<UserDto> getUsers(){
+        return userService.getAll();
     }
 
 }

@@ -28,5 +28,6 @@ public interface IUserService {
     String changeUserPasswordById(Long userId, String newPassword, String oldPassword);
 
     UserDto blockUser(Long id);
+    UserDto changeAdminStatus(Long id);
 
 }
