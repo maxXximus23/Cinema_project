@@ -44,10 +44,12 @@ public class UserService implements IUserService {
 
         checkUserStatus(user);
 
+        user.setStatus(Status.ACTIVE);
+
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(email, requestDto.getPassword()));
 
-        user.setStatus(Status.ACTIVE);
+
         userRepository.save(user);
 
         Map<String, String> response = new HashMap<>();
