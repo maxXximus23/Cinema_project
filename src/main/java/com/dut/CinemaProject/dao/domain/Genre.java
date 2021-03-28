@@ -21,4 +21,14 @@ public class Genre {
     @JsonIgnore
     @ManyToMany(mappedBy = "genres", fetch = FetchType.LAZY)
     private Set<Movie> movies;
+
+    @Override
+    public boolean equals(Object obj) {
+        return this.id.equals(((Genre) obj).getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Math.toIntExact(this.id);
+    }
 }

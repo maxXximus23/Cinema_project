@@ -131,8 +131,12 @@ public class MovieService implements IMovieService {
 
         List<Movie> movies = movieRepository.findAll();
 
+
         if(!genres.isEmpty()){
-            movies = movieRepository.findMoviesByGenres(genres);
+                movies = movies.stream()
+                        .filter(e -> e.getGenres().containsAll(genres))
+                        .collect(Collectors.toList());
+
         }
 
         if (!title.equals("") && movies.size() != 0)
@@ -165,8 +169,10 @@ public class MovieService implements IMovieService {
 
         List<Movie> movies = movieRepository.findAll();
 
-        if(!genres.isEmpty()){
-            movies = movieRepository.findMoviesByGenres(genres);
+        if(!genres.isEmpty()) {
+            movies = movies.stream()
+                    .filter(e -> e.getGenres().containsAll(genres))
+                    .collect(Collectors.toList());
         }
 
         if (!title.equals("") && movies.size() != 0)
