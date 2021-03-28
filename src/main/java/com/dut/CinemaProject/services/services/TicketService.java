@@ -17,6 +17,7 @@ import com.dut.CinemaProject.services.interfaces.ITicketService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -59,6 +60,9 @@ public class TicketService implements ITicketService {
         if (session.getIsCanceled())
             throw new BadRequestException("Session is already canceled!");
 
+        if (session.getDate().isBefore(LocalDateTime.now()))
+            throw new BadRequestException("Session is already held!");
+
         if(session.getHall().getRowsAmount() < purchaseTicket.getRow())
             throw new ValidationException("Row out of bounce");
 
@@ -96,6 +100,9 @@ public class TicketService implements ITicketService {
 
         if (session.getIsCanceled())
             throw new BadRequestException("Session is already canceled!");
+
+        if (session.getDate().isBefore(LocalDateTime.now()))
+            throw new BadRequestException("Session is already held!");
 
         User user = userRepository.findById(ticketsData.getUserId())
                 .orElseThrow(() -> new ItemNotFoundException("User not found"));
