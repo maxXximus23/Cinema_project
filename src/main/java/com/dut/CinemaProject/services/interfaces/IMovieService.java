@@ -1,5 +1,6 @@
 package com.dut.CinemaProject.services.interfaces;
 
+import com.dut.CinemaProject.dao.domain.Genre;
 import com.dut.CinemaProject.dto.Movie.MovieData;
 import com.dut.CinemaProject.dto.Movie.MovieDto;
 import com.dut.CinemaProject.dto.Movie.MovieTitle;
@@ -14,8 +15,8 @@ public interface IMovieService {
     MovieDto updateMovie(Long id, MovieData movie);
     MovieDto getMovieById(Long id);
     List<SessionShort> getSessions(Long id);
-    List<MovieDto> getMovies(Integer page, Integer perPage, String genre, String title);
-    Integer getPagesAmount(Integer perPage, String genre, String title);
+    List<MovieDto> getMovies(Integer page, Integer perPage, List<Genre> genres, String title);
+    Integer getPagesAmount(Integer perPage, List<Genre> genres, String title);
     List<MovieTitle> getTitles();
     List<MovieDto> getAll();
     void blockMovie(Long id);
