@@ -30,7 +30,6 @@ public class AuthenticationController {
         userService.logout(json);
     }
 
-
     @PostMapping("register")
     @ResponseStatus(HttpStatus.OK)
     public UserDto register(@RequestBody UserRegisterData userRegisterData){
@@ -43,5 +42,10 @@ public class AuthenticationController {
         userService.isEmailFree(email);
     }
 
+    @GetMapping("is-admin-true")
+    @ResponseStatus(HttpStatus.OK)
+    public boolean isAdminTrue(){
+        return true;
+    }
 
 }

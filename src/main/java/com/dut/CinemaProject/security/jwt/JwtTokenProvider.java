@@ -6,6 +6,7 @@ import com.dut.CinemaProject.exceptions.JwtAuthenticationException;
 import com.dut.CinemaProject.services.services.JwtBlacklistService;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,7 +18,10 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.Date;
+import java.util.List;
 
 @Component
 public class JwtTokenProvider {
@@ -29,6 +33,7 @@ public class JwtTokenProvider {
     @Value("${jwt.token.expired}")
     private long validityInMilliseconds;
 
+    @Qualifier("jwtUserDetailsService")
     @Autowired
     private UserDetailsService userDetailsService;
     @Autowired
@@ -66,7 +71,11 @@ public class JwtTokenProvider {
     }
 
     public String getUsername(String token) {
-        return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().getSubject();
+        return Jwts.parser()
+                .setSigningKey(secret)
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject();
     }
 
     public JwtBlacklist findTokenInBlacklist(String token){
@@ -94,7 +103,9 @@ public class JwtTokenProvider {
     private List<String> getRoleNames(List<Role> userRoles) {
         List<String> result = new ArrayList<>();
 
-        userRoles.forEach(role -> result.add(role.getName()));
+        userRoles.forEach(role ->
+                result.add(role.getName())
+        );
 
         return result;
     }

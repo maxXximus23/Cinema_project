@@ -61,6 +61,11 @@ public class MovieController {
         return movieService.getMovieById(id);
     }
 
+    @GetMapping("{id}/sessions")
+    public List<SessionShort> getSessions(@PathVariable Long id){
+        return movieService.getSessions(id);
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public MovieDto addMovie(@RequestBody MovieData newMovie){
@@ -88,10 +93,5 @@ public class MovieController {
     @ResponseStatus(HttpStatus.OK)
     public MovieDto updateMovie(@PathVariable Long id, @RequestBody MovieData movie){
         return  movieService.updateMovie(id, movie);
-    }
-
-    @GetMapping("{id}/sessions")
-    public List<SessionShort> getSessions(@PathVariable Long id){
-        return movieService.getSessions(id);
     }
 }

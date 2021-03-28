@@ -11,7 +11,7 @@ import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
-@RequestMapping("reviews")
+@RequestMapping("/reviews")
 @AllArgsConstructor
 public class ReviewController {
     private final IReviewService reviewService;
@@ -32,6 +32,12 @@ public class ReviewController {
     @ResponseStatus(HttpStatus.CREATED)
     public ReviewDto addReview(@RequestBody NewReview newReview){
         return reviewService.createReview(newReview);
+    }
+
+    @PutMapping("{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public ReviewDto editReview(@PathVariable Long id, @RequestBody String newText){
+        return reviewService.updateReview(id, newText);
     }
 
     @DeleteMapping("{id}")

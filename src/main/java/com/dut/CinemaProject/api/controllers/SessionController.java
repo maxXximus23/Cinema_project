@@ -28,7 +28,7 @@ public class SessionController {
     public List<SessionDto> getActual(){
         return sessionService.getActualSessions();
     }
-  
+
     @GetMapping("{id}/tickets")
     @ResponseStatus(HttpStatus.OK)
     public SessionTicketsList getTicketsList(@PathVariable Long id){
@@ -48,7 +48,7 @@ public class SessionController {
     }
 
     @PutMapping("{id}")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public SessionDto updateSession(@PathVariable Long id, @RequestBody SessionData sessionData){
         return sessionService.updateSession(id, sessionData);
     }
