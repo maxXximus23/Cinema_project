@@ -14,7 +14,10 @@ import com.dut.CinemaProject.services.interfaces.IMovieService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -131,12 +134,14 @@ public class MovieService implements IMovieService {
 
         List<Movie> movies = movieRepository.findAll();
 
-
         if(!genres.isEmpty()){
-                movies = movies.stream()
-                        .filter(e -> e.getGenres().containsAll(genres))
-                        .collect(Collectors.toList());
-
+            Set<Movie> genred = new LinkedHashSet<>();
+            for (Genre genre: genres) {
+                genred.addAll(movies.stream()
+                        .filter(e -> e.getGenres().contains(genre))
+                        .collect(Collectors.toList()));
+            }
+            movies = new ArrayList<>(genred);
         }
 
         if (!title.equals("") && movies.size() != 0)
@@ -169,10 +174,14 @@ public class MovieService implements IMovieService {
 
         List<Movie> movies = movieRepository.findAll();
 
-        if(!genres.isEmpty()) {
-            movies = movies.stream()
-                    .filter(e -> e.getGenres().containsAll(genres))
-                    .collect(Collectors.toList());
+        if(!genres.isEmpty()){
+            Set<Movie> genred = new LinkedHashSet<>();
+            for (Genre genre: genres) {
+                genred.addAll(movies.stream()
+                        .filter(e -> e.getGenres().contains(genre))
+                        .collect(Collectors.toList()));
+            }
+            movies = new ArrayList<>(genred);
         }
 
         if (!title.equals("") && movies.size() != 0)
