@@ -34,6 +34,12 @@ public class ReviewController {
         return reviewService.createReview(newReview);
     }
 
+    @PutMapping("{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public ReviewDto editReview(@PathVariable Long id, @RequestBody String newText){
+        return reviewService.updateReview(id, newText);
+    }
+
     @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteComment(@PathVariable Long id){
