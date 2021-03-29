@@ -73,4 +73,9 @@ public class HallController {
     public List<HallDto> getActive() {
         return hallService.getAllActiveHalls();
     }
+    @GetMapping("check-{name}")
+    @ResponseStatus(HttpStatus.OK)
+    public boolean isNameFree(@PathVariable String name){
+        return hallService.isNameFree(name);
+    }
 }

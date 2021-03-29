@@ -16,4 +16,5 @@ public interface IHallService {
     void unblockHall(Long id);
     List<HallDto> getAllBlockedHalls();
     List<HallDto> getAllActiveHalls();
+    boolean isNameFree(String name);
 }
