@@ -52,4 +52,25 @@ public class HallController {
     public List<HallDto> getAll(){
         return hallService.getAllHalls();
     }
+
+    @PutMapping("block/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void blockHall(@PathVariable Long id){
+        hallService.blockHall(id);
+    }
+    @PutMapping("unblock/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void unblockHall(@PathVariable Long id){
+        hallService.unblockHall(id);
+    }
+    @GetMapping("blocked")
+    @ResponseStatus(HttpStatus.OK)
+    public List<HallDto> getBlocked() {
+        return hallService.getAllBlockedHalls();
+    }
+    @GetMapping("active")
+    @ResponseStatus(HttpStatus.OK)
+    public List<HallDto> getActive() {
+        return hallService.getAllActiveHalls();
+    }
 }

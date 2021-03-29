@@ -16,4 +16,6 @@ public class Hall {
     private String name;
     private Integer rowsAmount;
     private Integer places;
+    @Column(name="is_blocked")
+    private Boolean isBlocked;
 }

@@ -33,8 +33,8 @@ public class HallService implements IHallService {
         hall.setName(newHall.getName());
         hall.setRowsAmount(newHall.getRowsAmount());
         hall.setPlaces(newHall.getPlaces());
+        hall.setIsBlocked(false);
 
-        //return hallRepository.save(hall).getId();
         return new HallDto(hallRepository.save(hall));
     }
 
@@ -84,6 +84,36 @@ public class HallService implements IHallService {
     @Override
     public List<HallDto> getAllHalls() {
         return hallRepository.findAll()
+                .stream()
+                .map(HallDto::new)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public void blockHall(Long id) {
+        Hall hall = hallRepository.findById(id).orElseThrow(() -> new ItemNotFoundException("Hall is not found"));
+        hall.setIsBlocked(true);
+        hallRepository.save(hall);
+    }
+
+    @Override
+    public void unblockHall(Long id) {
+        Hall hall = hallRepository.findById(id).orElseThrow(() -> new ItemNotFoundException("Hall is not found"));
+        hall.setIsBlocked(true);
+        hallRepository.save(hall);
+    }
+
+    @Override
+    public List<HallDto> getAllBlockedHalls() {
+        return hallRepository.findHallByIsBlocked(true)
+                .stream()
+                .map(HallDto::new)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<HallDto> getAllActiveHalls() {
+        return hallRepository.findHallByIsBlocked(false)
                 .stream()
                 .map(HallDto::new)
                 .collect(Collectors.toList());
