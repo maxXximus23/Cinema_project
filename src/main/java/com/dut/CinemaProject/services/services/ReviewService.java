@@ -82,4 +82,12 @@ public class ReviewService implements IReviewService {
 
         return new ReviewDto(reviewRepository.save(reviewDb));
     }
+
+    @Override
+    public List<ReviewDto> getAll() {
+        return reviewRepository.findAll()
+                .stream()
+                .map(ReviewDto::new)
+                .collect(Collectors.toList());
+    }
 }

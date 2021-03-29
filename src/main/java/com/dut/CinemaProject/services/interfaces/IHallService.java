@@ -12,4 +12,9 @@ public interface IHallService {
     HallDto updateHall(Long id, UpdateHallData hall);
     HallDto getHallById(Long id);
     List<HallDto> getAllHalls();
+    void blockHall(Long id);
+    void unblockHall(Long id);
+    List<HallDto> getAllBlockedHalls();
+    List<HallDto> getAllActiveHalls();
+    boolean isNameFree(String name);
 }

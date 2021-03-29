@@ -16,6 +16,12 @@ import java.util.List;
 public class ReviewController {
     private final IReviewService reviewService;
 
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public List<ReviewDto> getAll(){
+        return reviewService.getAll();
+    }
+
     @GetMapping("{id}")
     @ResponseStatus(HttpStatus.OK)
     public ReviewDto getById(@PathVariable Long id){

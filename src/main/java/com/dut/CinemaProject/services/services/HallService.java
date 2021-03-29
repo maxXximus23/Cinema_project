@@ -1,5 +1,6 @@
 package com.dut.CinemaProject.services.services;
 
+import com.dut.CinemaProject.dao.domain.Genre;
 import com.dut.CinemaProject.dao.domain.Hall;
 import com.dut.CinemaProject.dao.repos.HallRepository;
 import com.dut.CinemaProject.dto.Hall.HallDto;
@@ -12,6 +13,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,8 +35,8 @@ public class HallService implements IHallService {
         hall.setName(newHall.getName());
         hall.setRowsAmount(newHall.getRowsAmount());
         hall.setPlaces(newHall.getPlaces());
+        hall.setIsBlocked(false);
 
-        //return hallRepository.save(hall).getId();
         return new HallDto(hallRepository.save(hall));
     }
 
@@ -87,5 +89,40 @@ public class HallService implements IHallService {
                 .stream()
                 .map(HallDto::new)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void blockHall(Long id) {
+        Hall hall = hallRepository.findById(id).orElseThrow(() -> new ItemNotFoundException("Hall is not found"));
+        hall.setIsBlocked(true);
+        hallRepository.save(hall);
+    }
+
+    @Override
+    public void unblockHall(Long id) {
+        Hall hall = hallRepository.findById(id).orElseThrow(() -> new ItemNotFoundException("Hall is not found"));
+        hall.setIsBlocked(false);
+        hallRepository.save(hall);
+    }
+
+    @Override
+    public List<HallDto> getAllBlockedHalls() {
+        return hallRepository.findHallByIsBlocked(true)
+                .stream()
+                .map(HallDto::new)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<HallDto> getAllActiveHalls() {
+        return hallRepository.findHallByIsBlocked(false)
+                .stream()
+                .map(HallDto::new)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public boolean isNameFree(String name) {
+        return hallRepository.findByName(name).size() <= 0;
     }
 }

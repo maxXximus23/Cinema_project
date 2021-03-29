@@ -1,5 +1,6 @@
 package com.dut.CinemaProject.api.controllers;
 
+import com.dut.CinemaProject.dao.domain.Genre;
 import com.dut.CinemaProject.dto.Movie.MovieData;
 import com.dut.CinemaProject.dto.Movie.MovieDto;
 import com.dut.CinemaProject.dto.Movie.MovieTitle;
@@ -37,21 +38,21 @@ public class MovieController {
         return movieService.getTitles();
     }
 
-    @GetMapping
+    @PostMapping("pages")
     @ResponseStatus(HttpStatus.OK)
     public List<MovieDto> getMovies(@RequestParam(name = "page", defaultValue = "1") Integer page,
                                     @RequestParam(name = "perPage", defaultValue = "20") Integer perPage,
-                                    @RequestParam(name = "genre", defaultValue = "") String genre,
+                                    @RequestBody List<Genre> genres,
                                     @RequestParam(name = "title", defaultValue = "") String title){
-        return movieService.getMovies(page, perPage, genre, title);
+        return movieService.getMovies(page, perPage, genres, title);
     }
 
-    @GetMapping("pages/{perPage}")
+    @PostMapping("pages/{perPage}")
     @ResponseStatus(HttpStatus.OK)
     public Integer pageAmount(@PathVariable Integer perPage,
-                              @RequestParam(name = "genre", defaultValue = "") String genre,
+                              @RequestBody List<Genre> genres,
                               @RequestParam(name = "title", defaultValue = "") String title){
-        return movieService.getPagesAmount(perPage, genre, title);
+        return movieService.getPagesAmount(perPage, genres, title);
     }
 
     @GetMapping("{id}")

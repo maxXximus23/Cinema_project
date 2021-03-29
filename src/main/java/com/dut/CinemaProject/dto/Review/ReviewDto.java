@@ -14,6 +14,7 @@ public class ReviewDto {
     public ReviewDto(Review review){
         this.id = review.getId();
         this.movieId = review.getMovie().getId();
+        this.movieTitle = review.getMovie().getTitle();
         this.authorId = review.getAuthor().getId();
         this.firstName = review.getAuthor().getFirstName();
         this.lastName = review.getAuthor().getLastName();
@@ -26,6 +27,7 @@ public class ReviewDto {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm dd-MM-yyyy")
     private LocalDateTime creationDate;
     private Long movieId;
+    private String movieTitle;
     private Long authorId;
     private String firstName;
     private String lastName;

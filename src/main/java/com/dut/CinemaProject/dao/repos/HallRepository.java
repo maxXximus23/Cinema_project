@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface HallRepository extends JpaRepository<Hall, Long> {
     List<Hall> findByName(String name);
+    List<Hall> findHallByIsBlocked(Boolean isBlocked);
 }
