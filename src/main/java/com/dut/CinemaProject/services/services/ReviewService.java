@@ -37,6 +37,9 @@ public class ReviewService implements IReviewService {
         if(newReview.getText().isBlank())
             throw new BadRequestException("Text is empty");
 
+        if (newReview.getText().length() > 255)
+            throw new BadRequestException("Text is too long!");
+
         Review review = new Review();
         review.setAuthor(user);
         review.setMovie(movie);
@@ -62,5 +65,29 @@ public class ReviewService implements IReviewService {
     public void deleteReview(Long id) {
         Review review = reviewRepository.findById(id).orElseThrow(ItemNotFoundException::new);
         reviewRepository.delete(review);
+    }
+
+    @Override
+    public ReviewDto updateReview(Long id, String newText) {
+        Review reviewDb = reviewRepository.findById(id)
+                .orElseThrow(() -> new ItemNotFoundException("Review not found"));
+
+        if(newText.isBlank())
+            throw new BadRequestException("Text is empty");
+
+        if (newText.length() > 255)
+            throw new BadRequestException("Text is too long!");
+
+        reviewDb.setText(newText);
+
+        return new ReviewDto(reviewRepository.save(reviewDb));
+    }
+
+    @Override
+    public List<ReviewDto> getAll() {
+        return reviewRepository.findAll()
+                .stream()
+                .map(ReviewDto::new)
+                .collect(Collectors.toList());
     }
 }
