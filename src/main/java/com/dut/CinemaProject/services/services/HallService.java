@@ -99,7 +99,7 @@ public class HallService implements IHallService {
     @Override
     public void unblockHall(Long id) {
         Hall hall = hallRepository.findById(id).orElseThrow(() -> new ItemNotFoundException("Hall is not found"));
-        hall.setIsBlocked(true);
+        hall.setIsBlocked(false);
         hallRepository.save(hall);
     }
 
