@@ -3,7 +3,7 @@
 ## Project details
 
 - Project name: Cinema
-- Front repository: [Cinema front] (https://github.com/maxXximus23/Cinema_project_front)
+- Front repository: -[Cinema front](https://github.com/maxXximus23/Cinema_project_front)
 
 ## Overview
 
