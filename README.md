@@ -84,7 +84,7 @@ message.properties
 
 ## Technologies / Libraries
 
-- Spring MVC
+- Spring
 - Hibernate
 - Thymeleaf template engine
 - MySQL
