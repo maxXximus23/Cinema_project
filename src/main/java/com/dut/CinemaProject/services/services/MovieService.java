@@ -6,6 +6,7 @@ import com.dut.CinemaProject.dao.repos.MovieRepository;
 import com.dut.CinemaProject.dao.repos.SessionRepository;
 import com.dut.CinemaProject.dto.Movie.MovieData;
 import com.dut.CinemaProject.dto.Movie.MovieDto;
+import com.dut.CinemaProject.dto.Movie.MoviePage;
 import com.dut.CinemaProject.dto.Movie.MovieTitle;
 import com.dut.CinemaProject.dto.Session.SessionShort;
 import com.dut.CinemaProject.exceptions.BadRequestException;
@@ -125,7 +126,7 @@ public class MovieService implements IMovieService {
     }
 
     @Override
-    public List<MovieDto> getMovies(Integer page, Integer perPage, List<Genre> genres, String title) {
+    public MoviePage getMovies(Integer page, Integer perPage, List<Genre> genres, String title) {
         if (page < 1)
             throw new BadRequestException("Page can not be less than 1!");
 
@@ -154,17 +155,27 @@ public class MovieService implements IMovieService {
         if (movies.size() < (page - 1) * perPage)
             throw new BadRequestException("Requested page does not exist!");
 
-        if (movies.size() >= page * perPage)
-            return movies.subList((page - 1) * perPage, perPage * page)
-                    .stream()
-                    .map(MovieDto::new)
-                    .collect(Collectors.toList());
-        else
-            return movies.subList((page - 1) * perPage, movies.size())
-                    .stream()
-                    .map(MovieDto::new)
-                    .collect(Collectors.toList());
+        MoviePage result = new MoviePage();
 
+        if (movies.size() >= page * perPage)
+            result.setMovies(movies.subList((page - 1) * perPage, perPage * page)
+                    .stream()
+                    .map(MovieDto::new)
+                    .collect(Collectors.toList()));
+        else
+            result.setMovies(movies.subList((page - 1) * perPage, movies.size())
+                    .stream()
+                    .map(MovieDto::new)
+                    .collect(Collectors.toList()));
+
+        double pages = (double) movies.size() / ((double) perPage);
+
+        if (pages == (int) pages)
+            result.setPages((int) pages);
+        else
+            result.setPages((int) (pages + 1));
+
+        return result;
     }
 
     @Override

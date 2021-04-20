@@ -3,6 +3,7 @@ package com.dut.CinemaProject.api.controllers;
 import com.dut.CinemaProject.dao.domain.Genre;
 import com.dut.CinemaProject.dto.Movie.MovieData;
 import com.dut.CinemaProject.dto.Movie.MovieDto;
+import com.dut.CinemaProject.dto.Movie.MoviePage;
 import com.dut.CinemaProject.dto.Movie.MovieTitle;
 import com.dut.CinemaProject.dto.Session.SessionShort;
 import com.dut.CinemaProject.services.interfaces.IMovieService;
@@ -40,10 +41,10 @@ public class MovieController {
 
     @PostMapping("pages")
     @ResponseStatus(HttpStatus.OK)
-    public List<MovieDto> getMovies(@RequestParam(name = "page", defaultValue = "1") Integer page,
-                                    @RequestParam(name = "perPage", defaultValue = "20") Integer perPage,
-                                    @RequestBody List<Genre> genres,
-                                    @RequestParam(name = "title", defaultValue = "") String title){
+    public MoviePage getMovies(@RequestParam(name = "page", defaultValue = "1") Integer page,
+                               @RequestParam(name = "perPage", defaultValue = "20") Integer perPage,
+                               @RequestBody List<Genre> genres,
+                               @RequestParam(name = "title", defaultValue = "") String title){
         return movieService.getMovies(page, perPage, genres, title);
     }
 
