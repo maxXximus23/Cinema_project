@@ -3,6 +3,7 @@
 ## Project details
 
 - Project name: Cinema
+- Front repository: [Cinema front](https://github.com/maxXximus23/Cinema_project_front)
 
 ## Overview
 
@@ -83,7 +84,7 @@ message.properties
 
 ## Technologies / Libraries
 
-- Spring MVC
+- Spring
 - Hibernate
 - Thymeleaf template engine
 - MySQL
